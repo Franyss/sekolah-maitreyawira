@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class History extends Model
+class Sejarah extends Model
 {
+    // Mengarah ke tabel 'history' di database
     protected $table = 'history';
     protected $primaryKey = 'history_id';
 
@@ -18,6 +19,9 @@ class History extends Model
         'color',
     ];
 
+    /**
+     * Relasi ke detail sejarah (gambar & deskripsi)
+     */
     public function details()
     {
         return $this->hasMany(HistoryDetail::class, 'history_id', 'history_id');

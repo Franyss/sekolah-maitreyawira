@@ -17,4 +17,12 @@ class Facility extends Model
         'facility_desc',
         'facility_photo',
     ];
+
+    /**
+     * Relasi ke detail fasilitas (jika ada rincian konten tambahan)
+     */
+    public function details()
+    {
+        return $this->hasMany(FacilityDetail::class, 'facility_id', 'facility_id');
+    }
 }

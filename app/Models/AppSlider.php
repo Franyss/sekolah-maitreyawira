@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class AppSlider extends Model
 {
     protected $table = 'app_slider';
-    protected $primaryKey = 'app_slider_id';
+    protected $primaryKey = 'id';
+
     const CREATED_AT = 'datetime_created';
     const UPDATED_AT = 'datetime_last_updated';
 

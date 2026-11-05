@@ -6,21 +6,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Program Unggulan | Sekolah Maitreyawira Palembang</title>
+
+    {{-- CSS AOS & Tailwind --}}
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     @vite('resources/css/app.css')
 </head>
 
-<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white flex flex-col min-h-screen">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white flex flex-col min-h-screen overflow-x-hidden">
 
     {{-- 1. HEADER / NAVBAR PARTIAL --}}
     @include('partials.navbar')
 
-    {{-- 2. HERO BANNER & BREADCRUMB (Gaya PCR) --}}
+    {{-- 2. HERO BANNER & BREADCRUMB --}}
     <section class="relative bg-slate-900 text-white overflow-hidden py-16 sm:py-20">
         <!-- Background Overlay Pattern -->
         <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-blue-950/90 to-slate-900/80 z-10"></div>
         <div class="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-15"></div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
             <!-- Breadcrumb -->
             <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center">
                 <a href="/" class="hover:text-amber-400 transition">Beranda</a>
@@ -56,7 +59,7 @@
                 <main class="lg:col-span-8 space-y-10">
 
                     <!-- INTRO PROGRAM UNGGULAN -->
-                    <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4">
+                    <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4" data-aos="fade-up" data-aos-delay="100">
                         <div class="border-b border-slate-100 pb-4">
                             <h2 class="text-2xl font-black text-slate-900">Kurikulum Berbasis Karakter & Masa Depan</h2>
                             <p class="text-xs text-blue-600 font-bold uppercase tracking-wider mt-1">Sinergi Pembelajaran Holistik</p>
@@ -70,7 +73,7 @@
                     <div class="space-y-6">
 
                         <!-- 1. Pendidikan Karakter Kasih Alam & Budi Pekerti -->
-                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4 hover:border-blue-200 transition group">
+                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4 hover:border-blue-200 transition group" data-aos="fade-up" data-aos-delay="150">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-center gap-4">
                                     <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 font-black flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition">
@@ -93,7 +96,7 @@
                         </div>
 
                         <!-- 2. Trilingual Program (Bahasa Indonesia, Inggris, Mandarin) -->
-                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4 hover:border-blue-200 transition group">
+                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4 hover:border-blue-200 transition group" data-aos="fade-up" data-aos-delay="200">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-center gap-4">
                                     <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 font-black flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition">
@@ -115,7 +118,7 @@
                         </div>
 
                         <!-- 3. Literasi Digital & STEM / Coding -->
-                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4 hover:border-blue-200 transition group">
+                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4 hover:border-blue-200 transition group" data-aos="fade-up" data-aos-delay="250">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-center gap-4">
                                     <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 font-black flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition">
@@ -138,7 +141,7 @@
                         </div>
 
                         <!-- 4. Seni, Budaya & Ekstrakurikuler Multibakat -->
-                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4 hover:border-blue-200 transition group">
+                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4 hover:border-blue-200 transition group" data-aos="fade-up" data-aos-delay="300">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-center gap-4">
                                     <div class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 font-black flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition">
@@ -161,7 +164,7 @@
                         </div>
 
                         <!-- 5. Gaya Hidup Sehat & Kantin Vegetaris -->
-                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4 hover:border-blue-200 transition group">
+                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4 hover:border-blue-200 transition group" data-aos="fade-up" data-aos-delay="350">
                             <div class="flex items-start justify-between gap-4">
                                 <div class="flex items-center gap-4">
                                     <div class="w-14 h-14 rounded-2xl bg-red-100 text-red-600 font-black flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition">
@@ -185,7 +188,7 @@
                     </div>
 
                     <!-- HIGHLIGHT CALLOUT -->
-                    <div class="bg-gradient-to-br from-blue-900 to-slate-900 text-white rounded-2xl p-8 shadow-xl space-y-4">
+                    <div class="bg-gradient-to-br from-blue-900 to-slate-900 text-white rounded-2xl p-8 shadow-xl space-y-4" data-aos="zoom-in" data-aos-delay="200">
                         <h3 class="text-2xl font-black">Siap Menjadi Bagian dari Generasi Unggul?</h3>
                         <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
                             Kami mengundang Bapak/Ibu untuk melihat langsung lingkungan belajar dan program pembelajaran di Sekolah Maitreyawira Palembang.
@@ -195,7 +198,7 @@
                 </main>
 
                 <!-- SIDEBAR NAVIGASI & INFORMASI (4 Kolom) -->
-                <aside class="lg:col-span-4 space-y-6 sticky top-28">
+                <aside class="lg:col-span-4 space-y-6 sticky top-28" data-aos="fade-left" data-aos-delay="200">
 
                     <!-- Menu Navigasi Sub-Halaman -->
                     <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-4">
@@ -223,7 +226,7 @@
                                 <span>Pencapaian & Prestasi</span>
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </a>
-                            <a href="/testimoni-orang-tua-siswa" class="flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition">
+                            <a href="/testimoni" class="flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition">
                                 <span>Testimoni Orang Tua</span>
                                 <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                             </a>
@@ -231,14 +234,14 @@
                     </div>
 
                     <!-- Widget PPDB Call-to-Action -->
-                    <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl p-6 text-slate-900 shadow-md space-y-4">
+                    <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl p-6 text-slate-900 shadow-md space-y-4" data-aos="fade-up" data-aos-delay="300">
                         <div class="font-black text-lg leading-tight">
                             Bergabung Bersama Keluarga Maitreyawira!
                         </div>
                         <p class="text-xs text-slate-800 font-medium leading-relaxed">
                             Pendaftaran Murid Baru (PPDB) T.A 2026/2027 telah dibuka untuk jenjang TK, SD, SMP, dan SMA.
                         </p>
-                        <a href="#ppdb" class="inline-block w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-amber-400 font-extrabold text-xs text-center rounded-xl shadow-xs transition">
+                        <a href="/pendaftaran-siswa" class="inline-block w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-amber-400 font-extrabold text-xs text-center rounded-xl shadow-xs transition">
                             Daftar PPDB Online Sekarang
                         </a>
                     </div>
@@ -252,5 +255,17 @@
     {{-- 4. FOOTER PARTIAL --}}
     @include('partials.footer')
 
+    {{-- JS AOS --}}
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 100,
+                easing: 'ease-out-cubic'
+            });
+        });
+    </script>
 </body>
 </html>

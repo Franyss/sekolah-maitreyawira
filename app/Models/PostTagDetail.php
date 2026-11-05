@@ -15,11 +15,13 @@ class PostTagDetail extends Model
         'post_tag_id',
     ];
 
+    // FK: post_id -> post.post_id
     public function post()
     {
         return $this->belongsTo(Post::class, 'post_id', 'post_id');
     }
 
+    // FK: post_tag_id -> post_tag.post_tag_id
     public function postTag()
     {
         return $this->belongsTo(PostTag::class, 'post_tag_id', 'post_tag_id');

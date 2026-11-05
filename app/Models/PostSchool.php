@@ -15,10 +15,13 @@ class PostSchool extends Model
         'sch_id',
     ];
 
+    // FK: post_id -> post.post_id
     public function post()
     {
         return $this->belongsTo(Post::class, 'post_id', 'post_id');
     }
+
+    // FK: sch_id -> school.sch_id
     public function school()
     {
         return $this->belongsTo(School::class, 'sch_id', 'sch_id');

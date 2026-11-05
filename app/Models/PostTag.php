@@ -16,4 +16,10 @@ class PostTag extends Model
         'post_tag_name',
         'post_tag_slug',
     ];
+
+    // Pivot FK: post_tag_detail (post_tag_id & post_id)
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class, 'post_tag_detail', 'post_tag_id', 'post_id');
+    }
 }

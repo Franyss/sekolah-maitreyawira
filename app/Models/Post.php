@@ -22,8 +22,21 @@ class Post extends Model
         'total_views',
     ];
 
+    // FK: author_id -> user.user_id
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id', 'user_id');
+    }
+
+    // Pivot FK: post_tag_detail (post_id & post_tag_id)
+    public function tags()
+    {
+        return $this->belongsToMany(PostTag::class, 'post_tag_detail', 'post_id', 'post_tag_id');
+    }
+
+    // Pivot FK: post_school (post_id & sch_id)
+    public function schools()
+    {
+        return $this->belongsToMany(School::class, 'post_school', 'post_id', 'sch_id');
     }
 }
