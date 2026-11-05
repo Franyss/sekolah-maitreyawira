@@ -66,57 +66,37 @@
 
                         <div class="p-6 bg-gradient-to-br from-blue-50/60 to-slate-50 rounded-2xl border border-blue-100/80" data-aos="zoom-in" data-aos-delay="200">
                             <p class="text-slate-800 font-extrabold text-lg sm:text-xl leading-relaxed italic text-center">
-                                "Menjadi lembaga pendidikan terpadu yang unggul dalam membentuk manusia berintegritas, berakhlak mulia, cerdas secara akademik, dan berjiwa Kasih Alam Universal."
+                                "Terwujudnya Keindahan Kodrati Manusia"
                             </p>
                         </div>
                     </div>
 
-                    <!-- MISI SEKOLAH -->
+                    <!-- MISI SEKOLAH (Tanpa Angka & Lebih Simpel) -->
                     <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-6" data-aos="fade-up" data-aos-delay="150">
                         <div class="border-b border-slate-100 pb-4">
                             <h2 class="text-2xl font-black text-slate-900">Misi Sekolah</h2>
                             <p class="text-xs text-blue-600 font-bold uppercase tracking-wider mt-0.5">Langkah & Komitmen Strategis</p>
                         </div>
 
-                        <div class="space-y-4">
-                            <div class="flex gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition" data-aos="fade-up" data-aos-delay="200">
-                                <span class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shrink-0">1</span>
-                                <div>
-                                    <h3 class="font-bold text-slate-900 text-base">Pendidikan Budi Pekerti & Moral</h3>
-                                    <p class="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed">
-                                        Menanamkan nilai-nilai etika, rasa hormat, kedisiplinan, dan tanggung jawab moral dalam kehidupan sehari-hari.
-                                    </p>
-                                </div>
+                        <div class="space-y-3">
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition flex items-center gap-3" data-aos="fade-up" data-aos-delay="200">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+                                <h3 class="font-bold text-slate-900 text-sm sm:text-base">Meyakini Harkat Hidup Manusia adalah Tak Ternilai</h3>
                             </div>
 
-                            <div class="flex gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition" data-aos="fade-up" data-aos-delay="300">
-                                <span class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shrink-0">2</span>
-                                <div>
-                                    <h3 class="font-bold text-slate-900 text-base">Keunggulan Akademik & Teknologi</h3>
-                                    <p class="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed">
-                                        Menyelenggarakan proses pembelajaran berkualitas berbasis kurikulum nasional yang dipadukan dengan penguasaan teknologi informasi dan bahasa asing.
-                                    </p>
-                                </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition flex items-center gap-3" data-aos="fade-up" data-aos-delay="300">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+                                <h3 class="font-bold text-slate-900 text-sm sm:text-base">Menjunjung Kemuliaan Hidup Semua Makhluk</h3>
                             </div>
 
-                            <div class="flex gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition" data-aos="fade-up" data-aos-delay="400">
-                                <span class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shrink-0">3</span>
-                                <div>
-                                    <h3 class="font-bold text-slate-900 text-base">Budaya Kasih Alam & Kelestarian Ekosistem</h3>
-                                    <p class="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed">
-                                        Menumbuhkan kesadaran kepedulian terhadap kelestarian lingkungan hidup dan cinta terhadap sesama makhluk ciptaan Tuhan.
-                                    </p>
-                                </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition flex items-center gap-3" data-aos="fade-up" data-aos-delay="400">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+                                <h3 class="font-bold text-slate-900 text-sm sm:text-base">Mengasihi Alam Semesta</h3>
                             </div>
 
-                            <div class="flex gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition" data-aos="fade-up" data-aos-delay="500">
-                                <span class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center shrink-0">4</span>
-                                <div>
-                                    <h3 class="font-bold text-slate-900 text-base">Pengembangan Bakat & Kepemimpinan</h3>
-                                    <p class="text-slate-600 text-xs sm:text-sm mt-1 leading-relaxed">
-                                        Mendorong potensi unik murid melalui kegiatan minat-bakat, seni, olahraga, serta pembentukan jiwa kepemimpinan yang mandiri.
-                                    </p>
-                                </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition flex items-center gap-3" data-aos="fade-up" data-aos-delay="500">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+                                <h3 class="font-bold text-slate-900 text-sm sm:text-base">Mewujudkan Dunia Satu Keluarga</h3>
                             </div>
                         </div>
                     </div>
@@ -130,11 +110,8 @@
 
                         <div class="text-center py-6 space-y-3">
                             <div class="text-3xl sm:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 uppercase" data-aos="fade-up" data-aos-delay="300">
-                                "Dunia Satu Keluarga"
+                                "ANTUSIAS, RAMAH, KASIH"
                             </div>
-                            <p class="text-slate-300 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="400">
-                                Menjunjung tinggi semangat persaudaraan universal, saling menghormati keberagaman, serta menyebarkan kedamaian dan kasih sayang kepada seluruh umat manusia.
-                            </p>
                         </div>
                     </div>
 

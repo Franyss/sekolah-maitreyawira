@@ -76,6 +76,20 @@
                             <span>Konsultasi (`consultation_set`)</span>
                         </div>
                     </a>
+                    <a href="{{ url('/data/testimony') }}"
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/testimony*') || request()->query('table') === 'testimony' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-quote-left text-xs w-4"></i>
+                            <span>Testimoni (`testimony`)</span>
+                        </div>
+                    </a>
+                    <a href="{{ url('/data/testimony_detail') }}"
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/testimony_detail*') || request()->query('table') === 'testimony_detail' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-quote-right text-xs w-4"></i>
+                            <span>Detail Testimoni (`testimony_detail`)</span>
+                        </div>
+                    </a>
                 </div>
             </div>
 
@@ -95,6 +109,13 @@
                         <div class="flex items-center gap-2.5">
                             <i class="fa-solid fa-tags text-xs w-4"></i>
                             <span>Tag Berita (`post_tag`)</span>
+                        </div>
+                    </a>
+                    <a href="{{ url('/data/post_tag_detail') }}"
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/post_tag_detail*') || request()->query('table') === 'post_tag_detail' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-tag text-xs w-4"></i>
+                            <span>Detail Tag (`post_tag_detail`)</span>
                         </div>
                     </a>
                     <a href="{{ url('/data/post_school') }}"
@@ -126,10 +147,17 @@
                         </div>
                     </a>
                     <a href="{{ url('/data/history') }}"
-                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/history*') || request()->query('table') === 'history' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/history') || request()->query('table') === 'history' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
                         <div class="flex items-center gap-2.5">
                             <i class="fa-solid fa-clock-rotate-left text-xs w-4"></i>
                             <span>Sejarah (`history`)</span>
+                        </div>
+                    </a>
+                    <a href="{{ url('/data/history_detail') }}"
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/history_detail*') || request()->query('table') === 'history_detail' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-timeline text-xs w-4"></i>
+                            <span>Detail Sejarah (`history_detail`)</span>
                         </div>
                     </a>
                 </div>
