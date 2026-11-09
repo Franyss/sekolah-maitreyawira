@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sejarah;
+use App\Models\AppMenu;
 
 class SejarahController extends Controller
 {
@@ -11,6 +12,9 @@ class SejarahController extends Controller
         // Ambil data Sejarah beserta relasi detailnya
         $histories = Sejarah::with('details')->orderBy('history_date', 'asc')->get();
 
-        return view('sejarah', compact('histories'));
+        // Ambil data menu app_menu untuk halaman sejarah
+        $menu = AppMenu::where('slug', 'sejarah')->first();
+
+        return view('sejarah', compact('histories', 'menu'));
     }
 }

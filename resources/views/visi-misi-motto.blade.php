@@ -14,40 +14,27 @@
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white flex flex-col min-h-screen overflow-x-hidden">
 
+    @php
+        // Fallback langsung dari DB jika $configs belum dikirim via controller
+        $pageConfigs = $configs ?? \Illuminate\Support\Facades\DB::table('app_config')
+            ->whereIn('conf_key', ['app_page_vision', 'app_page_mission', 'app_page_motto'])
+            ->pluck('conf_value', 'conf_key');
+    @endphp
+
     {{-- 1. HEADER / NAVBAR PARTIAL --}}
     @include('partials.navbar')
 
-    {{-- 2. HERO BANNER & BREADCRUMB --}}
-    <section class="relative bg-slate-900 text-white overflow-hidden py-16 sm:py-20">
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-blue-950/90 to-slate-900/80 z-10"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-15"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
-            <!-- Breadcrumb -->
-            <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center">
-                <a href="/" class="hover:text-amber-400 transition">Beranda</a>
-                <span>/</span>
-                <span class="text-slate-300">Tentang Kami</span>
-                <span>/</span>
-                <span class="text-amber-400">Visi, Misi & Motto</span>
-            </nav>
-
-            <div class="max-w-3xl space-y-4">
-                <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-widest">
-                    Profil Lembaga
-                </span>
-                <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-                    Visi, Misi & Motto <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500">
-                        Sekolah Maitreyawira Palembang
-                    </span>
-                </h1>
-                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    Landasan filosofis dan komitmen berkelanjutan dalam membina insan berkarakter mulia, berilmu pengetahuan, dan berjiwa kasih alam.
-                </p>
-            </div>
-        </div>
-    </section>
+    {{-- 2. HERO BANNER & BREADCRUMB (MEMANGGIL PARTIALS/HERO-BANNER DENGAN TAG COMPONENT) --}}
+    <x-hero-banner
+        slug="visi-misi-motto"
+        badge="Profil Lembaga"
+        title="Visi, Misi & Motto"
+        highlight="Sekolah Maitreyawira Palembang"
+        :breadcrumbs="[
+            ['label' => 'Tentang Kami', 'url' => '#'],
+            ['label' => 'Visi, Misi & Motto', 'url' => '']
+        ]"
+    />
 
     {{-- 3. KONTEN UTAMA & SIDEBAR --}}
     <section class="py-16 bg-slate-50 flex-grow">
@@ -57,7 +44,7 @@
                 <!-- KONTEN UTAMA (8 Kolom) -->
                 <main class="lg:col-span-8 space-y-10">
 
-                    <!-- VISI SEKOLAH -->
+                    <!-- VISI SEKOLAH (DINAMIS DARI app_page_vision) -->
                     <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-6 relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
                         <div class="border-b border-slate-100 pb-4">
                             <h2 class="text-2xl font-black text-slate-900">Visi Sekolah</h2>
@@ -65,43 +52,46 @@
                         </div>
 
                         <div class="p-6 bg-gradient-to-br from-blue-50/60 to-slate-50 rounded-2xl border border-blue-100/80" data-aos="zoom-in" data-aos-delay="200">
-                            <p class="text-slate-800 font-extrabold text-lg sm:text-xl leading-relaxed italic text-center">
-                                "Terwujudnya Keindahan Kodrati Manusia"
-                            </p>
+                            <div class="text-slate-800 font-extrabold text-lg sm:text-xl leading-relaxed italic text-center">
+                                "{!! $pageConfigs['app_page_vision'] ?? 'Terwujudnya Keindahan Kodrati Manusia' !!}"
+                            </div>
                         </div>
                     </div>
 
-                    <!-- MISI SEKOLAH (Tanpa Angka & Lebih Simpel) -->
+                    <!-- MISI SEKOLAH (DINAMIS DARI app_page_mission) -->
                     <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-6" data-aos="fade-up" data-aos-delay="150">
                         <div class="border-b border-slate-100 pb-4">
                             <h2 class="text-2xl font-black text-slate-900">Misi Sekolah</h2>
                             <p class="text-xs text-blue-600 font-bold uppercase tracking-wider mt-0.5">Langkah & Komitmen Strategis</p>
                         </div>
 
-                        <div class="space-y-3">
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition flex items-center gap-3" data-aos="fade-up" data-aos-delay="200">
-                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
-                                <h3 class="font-bold text-slate-900 text-sm sm:text-base">Meyakini Harkat Hidup Manusia adalah Tak Ternilai</h3>
-                            </div>
-
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition flex items-center gap-3" data-aos="fade-up" data-aos-delay="300">
-                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
-                                <h3 class="font-bold text-slate-900 text-sm sm:text-base">Menjunjung Kemuliaan Hidup Semua Makhluk</h3>
-                            </div>
-
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition flex items-center gap-3" data-aos="fade-up" data-aos-delay="400">
-                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
-                                <h3 class="font-bold text-slate-900 text-sm sm:text-base">Mengasihi Alam Semesta</h3>
-                            </div>
-
-                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 hover:border-blue-200 transition flex items-center gap-3" data-aos="fade-up" data-aos-delay="500">
-                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
-                                <h3 class="font-bold text-slate-900 text-sm sm:text-base">Mewujudkan Dunia Satu Keluarga</h3>
-                            </div>
+                        <div class="text-slate-700 text-sm sm:text-base leading-relaxed prose max-w-none">
+                            @if(!empty($pageConfigs['app_page_mission']))
+                                {!! $pageConfigs['app_page_mission'] !!}
+                            @else
+                                <div class="space-y-3">
+                                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 flex items-center gap-3">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+                                        <h3 class="font-bold text-slate-900 text-sm sm:text-base">Meyakini Harkat Hidup Manusia adalah Tak Ternilai</h3>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 flex items-center gap-3">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+                                        <h3 class="font-bold text-slate-900 text-sm sm:text-base">Menjunjung Kemuliaan Hidup Semua Makhluk</h3>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 flex items-center gap-3">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+                                        <h3 class="font-bold text-slate-900 text-sm sm:text-base">Mengasihi Alam Semesta</h3>
+                                    </div>
+                                    <div class="p-4 rounded-xl bg-slate-50 border border-slate-100/80 flex items-center gap-3">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
+                                        <h3 class="font-bold text-slate-900 text-sm sm:text-base">Mewujudkan Dunia Satu Keluarga</h3>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
-                    <!-- MOTTO SEKOLAH -->
+                    <!-- MOTTO SEKOLAH (DINAMIS DARI app_page_motto) -->
                     <div class="bg-gradient-to-br from-blue-900 via-slate-900 to-slate-950 text-white rounded-2xl p-8 shadow-xl space-y-6 relative overflow-hidden" data-aos="zoom-in" data-aos-delay="200">
                         <div class="border-b border-slate-800 pb-4">
                             <h2 class="text-2xl font-black text-white">Motto Sekolah</h2>
@@ -109,8 +99,8 @@
                         </div>
 
                         <div class="text-center py-6 space-y-3">
-                            <div class="text-3xl sm:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 uppercase" data-aos="fade-up" data-aos-delay="300">
-                                "ANTUSIAS, RAMAH, KASIH"
+                            <div class="text-2xl sm:text-4xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 uppercase" data-aos="fade-up" data-aos-delay="300">
+                                "{!! $pageConfigs['app_page_motto'] ?? 'ANTUSIAS, RAMAH, KASIH' !!}"
                             </div>
                         </div>
                     </div>

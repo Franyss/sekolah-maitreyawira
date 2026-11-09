@@ -7,13 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $school->sch_name }} | Sekolah Maitreyawira Palembang</title>
 
-    {{-- Asset Vite & Fallback Tailwind CDN --}}
+    {{-- CSS AOS Library & Asset Vite / Tailwind CDN --}}
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     @vite('resources/css/app.css')
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen overflow-x-hidden">
 
     {{-- 1. NAVBAR PARTIAL --}}
     @if(View::exists('partials.navbar'))
@@ -28,15 +29,15 @@
         </header>
     @endif
 
-    {{-- 2. HERO BANNER (Gaya Sesuai Desain Referensi) --}}
+    {{-- 2. HERO BANNER --}}
     <section class="relative bg-slate-900 text-white overflow-hidden py-14 sm:py-20 min-h-[260px] flex items-center"
              style="@if(!empty($school->sch_background_header)) background-image: url('{{ asset('storage/' . $school->sch_background_header) }}'); background-size: cover; background-position: center; @endif">
 
-        <!-- Overlay Gelap Gradient (Memastikan Kontras & Teks Terbaca Jelas) -->
+        <!-- Overlay Gelap Gradient -->
         <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-blue-950/95 to-slate-900/90 z-10"></div>
         <div class="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-15"></div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full" data-aos="fade-down" data-aos-duration="1000">
             <!-- Navigasi Breadcrumb -->
             <nav class="flex text-xs font-semibold text-slate-300 mb-3 gap-2 items-center">
                 <a href="/" class="hover:text-amber-400 transition">Beranda</a>
@@ -53,7 +54,7 @@
                 </span>
             </div>
 
-            <!-- Judul Utama (Warna Putih & Aksen Kuning Emas) -->
+            <!-- Judul Utama -->
             <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
                 <span class="text-white block">Profil & Informasi</span>
                 <span class="text-amber-400">
@@ -75,14 +76,14 @@
 
                 <!-- KONTEN UTAMA: Sambutan & Profil Sekolah (8 Kolom) -->
                 <main class="lg:col-span-8 space-y-6">
-                    <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
+                    <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6" data-aos="fade-up" data-aos-delay="100">
 
                         <!-- Gambar Utama Unit Sekolah (sch_img) -->
                         @if(!empty($school->sch_img))
-                            <div class="overflow-hidden rounded-xl border border-slate-100 shadow-xs max-h-[380px]">
+                            <div class="overflow-hidden rounded-xl border border-slate-100 shadow-xs max-h-[380px]" data-aos="zoom-in" data-aos-delay="200">
                                 <img src="{{ asset('storage/' . $school->sch_img) }}"
                                      alt="{{ $school->sch_name }}"
-                                     class="w-full h-full object-cover">
+                                     class="w-full h-full object-cover hover:scale-105 transition duration-500">
                             </div>
                         @endif
 
@@ -93,7 +94,7 @@
                         </div>
 
                         <!-- Isi Sambutan / Deskripsi (sch_opening_speech) -->
-                        <div class="prose prose-slate max-w-none text-slate-700 text-xs sm:text-sm leading-relaxed space-y-4">
+                        <div class="prose prose-slate max-w-none text-slate-700 text-xs sm:text-sm leading-relaxed space-y-4" data-aos="fade-up" data-aos-delay="300">
                             @if(!empty($school->sch_opening_speech))
                                 {!! $school->sch_opening_speech !!}
                             @else
@@ -102,10 +103,10 @@
                         </div>
 
                         <!-- Tombol Pendaftaran Langsung -->
-                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between" data-aos="fade-up" data-aos-delay="350">
                             <span class="text-xs font-bold text-slate-500">Tertarik bergabung dengan {{ $school->sch_name }}?</span>
                             <a href="{{ route('pendaftaran-siswa.index') }}"
-                               class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
+                               class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2 transform hover:-translate-y-0.5">
                                 <i class="fa-solid fa-user-plus"></i>
                                 <span>Daftar Sekarang</span>
                             </a>
@@ -115,9 +116,9 @@
                 </main>
 
                 <!-- SIDEBAR INFORMASI KONTAK UNIT (4 Kolom) -->
-                <aside class="lg:col-span-4 space-y-6 sticky top-28">
+                <aside class="lg:col-span-4 space-y-6 sticky top-28" data-aos="fade-left" data-aos-delay="200">
 
-                    <!-- Kartu Informasi Kontak Unit (sch_address & sch_phone) -->
+                    <!-- Kartu Informasi Kontak Unit -->
                     <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-5">
                         <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3 flex items-center gap-2">
                             <i class="fa-solid fa-building text-blue-600"></i> Kontak Unit {{ $school->sch_name }}
@@ -167,5 +168,17 @@
         </footer>
     @endif
 
+    {{-- SCRIPT INISIALISASI ANIMASI AOS --}}
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 100,
+                easing: 'ease-out-cubic'
+            });
+        });
+    </script>
 </body>
 </html>

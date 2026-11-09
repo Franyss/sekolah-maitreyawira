@@ -5,10 +5,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $article->title }} | Sekolah Maitreyawira Palembang</title>
+    <title>{{ $post->title }} | Sekolah Maitreyawira Palembang</title>
 
-    {{-- CSS AOS & Tailwind --}}
+    {{-- CSS AOS Library, FontAwesome & Vite Tailwind --}}
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/app.css')
 </head>
 
@@ -29,44 +30,36 @@
                 <span>/</span>
                 <a href="{{ route('berita.index') }}" class="hover:text-amber-400 transition">Berita & Informasi</a>
                 <span>/</span>
-                <span class="text-amber-400 truncate max-w-xs sm:max-w-md">{{ $article->title }}</span>
+                <span class="text-amber-400 truncate max-w-xs sm:max-w-md">{{ $post->title }}</span>
             </nav>
 
             <div class="max-w-4xl space-y-4">
                 <!-- Badge Kategori -->
-                @if($article->type === 'prestasi')
-                    <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-widest">
-                        🏆 Prestasi & Pencapaian
-                    </span>
-                @else
-                    <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-widest">
-                        📰 Berita & Artikel
-                    </span>
-                @endif
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-widest">
+                    📰 Berita & Artikel
+                </span>
 
                 <!-- Judul Artikel -->
                 <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white">
-                    {{ $article->title }}
+                    {{ $post->title }}
                 </h1>
 
                 <!-- Meta Informasi Artikel -->
                 <div class="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-300 pt-2 border-t border-slate-800">
                     <div class="flex items-center gap-1.5">
-                        <span class="text-amber-400">👤</span>
-                        <span>{{ $article->author }}</span>
+                        <i class="fa-regular fa-user text-amber-400"></i>
+                        <span>{{ $post->author->first_name ?? 'Humas Maitreyawira' }}</span>
                     </div>
                     <span>•</span>
                     <div class="flex items-center gap-1.5">
-                        <span class="text-amber-400">📅</span>
-                        <span>{{ \Carbon\Carbon::parse($article->datetime_created)->translatedFormat('d F Y') }}</span>
+                        <i class="fa-regular fa-calendar text-amber-400"></i>
+                        <span>{{ \Carbon\Carbon::parse($post->datetime_created)->translatedFormat('d F Y') }}</span>
                     </div>
-                    @if($article->type === 'berita')
-                        <span>•</span>
-                        <div class="flex items-center gap-1.5">
-                            <span class="text-amber-400">👁️</span>
-                            <span>{{ $article->total_views }} Dilihat</span>
-                        </div>
-                    @endif
+                    <span>•</span>
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-regular fa-eye text-amber-400"></i>
+                        <span>{{ $post->total_views }} Dilihat</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,15 +76,15 @@
 
                         <!-- Gambar Sampul / Thumbnail -->
                         @php
-                            $thumb = $article->thumbnail;
+                            $thumb = $post->thumbnail;
                             $fileName = basename($thumb ?? '');
 
-                            if ($article->type === 'prestasi') {
-                                $imgUrl = 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?auto=format&fit=crop&w=1200&q=80';
-                            } elseif (!empty($fileName) && file_exists(public_path('uploads/post/' . $fileName))) {
+                            if (!empty($fileName) && file_exists(public_path('uploads/post/' . $fileName))) {
                                 $imgUrl = asset('uploads/post/' . $fileName);
                             } elseif (!empty($fileName) && file_exists(public_path('storage/post/' . $fileName))) {
                                 $imgUrl = asset('storage/post/' . $fileName);
+                            } elseif (!empty($thumb) && str_starts_with($thumb, 'http')) {
+                                $imgUrl = $thumb;
                             } else {
                                 $imgUrl = 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=1200&q=80';
                             }
@@ -99,21 +92,21 @@
 
                         <div class="overflow-hidden rounded-xl border border-slate-100 max-h-[420px] bg-slate-100">
                             <img src="{{ $imgUrl }}"
-                                 alt="{{ $article->title }}"
+                                 alt="{{ $post->title }}"
                                  class="w-full h-full object-cover">
                         </div>
 
                         <!-- Isi Teks Artikel -->
                         <div class="prose prose-slate max-w-none text-slate-700 text-sm sm:text-base leading-relaxed space-y-4 pt-2">
-                            {!! $article->content !!}
+                            {!! $post->content !!}
                         </div>
 
-                        <!-- Tags & Bagikan -->
+                        <!-- Tags & Kembali -->
                         <div class="pt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
-                            @if(isset($article->tags) && $article->tags->count() > 0)
+                            @if(isset($post->tags) && $post->tags->count() > 0)
                                 <div class="flex flex-wrap items-center gap-2">
                                     <span class="text-xs font-bold text-slate-500">Tag:</span>
-                                    @foreach($article->tags as $tag)
+                                    @foreach($post->tags as $tag)
                                         <a href="{{ route('berita.index', ['tag' => $tag->post_tag_slug]) }}"
                                            class="px-3 py-1 rounded-lg text-xs font-bold bg-blue-50 text-blue-600 hover:bg-blue-100 transition">
                                             #{{ $tag->post_tag_name }}
@@ -124,7 +117,8 @@
 
                             <div class="flex items-center gap-2">
                                 <a href="{{ route('berita.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center gap-1.5">
-                                    <span>← Kembali ke Daftar Berita</span>
+                                    <i class="fa-solid fa-arrow-left text-[11px]"></i>
+                                    <span>Kembali ke Daftar Berita</span>
                                 </a>
                             </div>
                         </div>
@@ -147,6 +141,10 @@
                                     $recentFileName = basename($recentThumb ?? '');
                                     if (!empty($recentFileName) && file_exists(public_path('uploads/post/' . $recentFileName))) {
                                         $rImgUrl = asset('uploads/post/' . $recentFileName);
+                                    } elseif (!empty($recentFileName) && file_exists(public_path('storage/post/' . $recentFileName))) {
+                                        $rImgUrl = asset('storage/post/' . $recentFileName);
+                                    } elseif (!empty($recentThumb) && str_starts_with($recentThumb, 'http')) {
+                                        $rImgUrl = $recentThumb;
                                     } else {
                                         $rImgUrl = 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=300&q=80';
                                     }
@@ -154,13 +152,14 @@
                                 <a href="{{ route('berita.show', $recent->slug) }}" class="flex items-start gap-3 group">
                                     <img src="{{ $rImgUrl }}"
                                          alt="{{ $recent->title }}"
-                                         class="w-16 h-16 rounded-xl object-cover shrink-0 border border-slate-100 group-hover:scale-105 transition">
+                                         class="w-16 h-16 rounded-xl object-cover shrink-0 border border-slate-100 group-hover:scale-105 transition duration-300">
                                     <div class="space-y-1">
                                         <h4 class="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition leading-snug line-clamp-2">
                                             {{ $recent->title }}
                                         </h4>
-                                        <span class="text-[10px] text-slate-400 block">
-                                            📅 {{ \Carbon\Carbon::parse($recent->datetime_created)->translatedFormat('d M Y') }}
+                                        <span class="text-[10px] text-slate-400 flex items-center gap-1">
+                                            <i class="fa-regular fa-calendar"></i>
+                                            {{ \Carbon\Carbon::parse($recent->datetime_created)->translatedFormat('d M Y') }}
                                         </span>
                                     </div>
                                 </a>

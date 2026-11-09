@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Testimony;
+use App\Models\AppMenu;
 use Illuminate\Http\Request;
 
 class TestimoniController extends Controller
@@ -12,7 +13,9 @@ class TestimoniController extends Controller
         // Ambil data testimoni dari database
         $testimonies = Testimony::orderBy('testimony_id', 'desc')->get();
 
-        // Tetap menggunakan view 'testimoni.blade.php'
-        return view('testimoni', compact('testimonies'));
+        // Ambil data menu app_menu untuk halaman testimoni
+        $menu = AppMenu::where('slug', 'testimoni')->first();
+
+        return view('testimoni', compact('testimonies', 'menu'));
     }
 }

@@ -55,6 +55,20 @@
                             <span>Unit Sekolah (`school`)</span>
                         </div>
                     </a>
+                    <a href="{{ url('/data/program') }}"
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/program') || request()->query('table') === 'program' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-star text-xs w-4"></i>
+                            <span>Program Unggulan (`program`)</span>
+                        </div>
+                    </a>
+                    <a href="{{ url('/data/program_detail') }}"
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/program_detail*') || request()->query('table') === 'program_detail' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-circle-info text-xs w-4"></i>
+                            <span>Detail Program (`program_detail`)</span>
+                        </div>
+                    </a>
                     <a href="{{ url('/data/student_reg') }}"
                        class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/student_reg') || request()->query('table') === 'student_reg' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
                         <div class="flex items-center gap-2.5">
@@ -69,6 +83,20 @@
                             <span>Beasiswa (`scholarship`)</span>
                         </div>
                     </a>
+                    <a href="{{ url('/data/achievement') }}"
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ (request()->is('data/achievement') && !request()->is('data/achievement_detail*')) || request()->query('table') === 'achievement' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-trophy text-xs w-4"></i>
+                            <span>Prestasi (`achievement`)</span>
+                        </div>
+                    </a>
+                    <a href="{{ url('/data/achievement_detail') }}"
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/achievement_detail*') || request()->query('table') === 'achievement_detail' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-award text-xs w-4"></i>
+                            <span>Detail Prestasi (`achievement_detail`)</span>
+                        </div>
+                    </a>
                     <a href="{{ url('/data/consultation_set') }}"
                        class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/consultation_set') || request()->query('table') === 'consultation_set' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
                         <div class="flex items-center gap-2.5">
@@ -77,7 +105,7 @@
                         </div>
                     </a>
                     <a href="{{ url('/data/testimony') }}"
-                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/testimony*') || request()->query('table') === 'testimony' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/testimony') || (request()->query('table') === 'testimony' && !request()->is('data/testimony_detail*')) ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
                         <div class="flex items-center gap-2.5">
                             <i class="fa-solid fa-quote-left text-xs w-4"></i>
                             <span>Testimoni (`testimony`)</span>

@@ -13,6 +13,7 @@ class Sejarah extends Model
     const CREATED_AT = 'datetime_created';
     const UPDATED_AT = 'datetime_last_updated';
 
+
     protected $fillable = [
         'history_title',
         'history_date',

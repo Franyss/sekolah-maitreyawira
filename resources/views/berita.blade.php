@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Berita & Artikel | Sekolah Maitreyawira Palembang</title>
 
-    {{-- CSS AOS & Tailwind --}}
+    {{-- CSS AOS Library, FontAwesome & Vite Tailwind --}}
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/app.css')
 </head>
 
@@ -17,76 +18,45 @@
     {{-- 1. HEADER / NAVBAR PARTIAL --}}
     @include('partials.navbar')
 
-    {{-- 2. HERO BANNER & BREADCRUMB --}}
-    <section class="relative bg-slate-900 text-white overflow-hidden py-16 sm:py-20">
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-blue-950/90 to-slate-900/80 z-10"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-15"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
-            <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center">
-                <a href="/" class="hover:text-amber-400 transition">Beranda</a>
-                <span>/</span>
-                <span class="text-amber-400">Berita & Informasi</span>
-            </nav>
-
-            <div class="max-w-3xl space-y-4">
-                <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-widest">
-                    Pusat Informasi & Kabar
-                </span>
-                <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-                    Berita & Kegiatan Terbaru <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500">
-                        Sekolah Maitreyawira Palembang
-                    </span>
-                </h1>
-                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    Dapatkan kabar terkini seputar liputan kegiatan sekolah, pengumuman resmi, prestasi murid, serta artikel seputar dunia pendidikan.
-                </p>
-            </div>
-        </div>
-    </section>
+    {{-- 2. HERO BANNER & BREADCRUMB (DINAMIS VIA BLADE COMPONENT <x-hero-banner>) --}}
+    <x-hero-banner
+        slug="berita"
+        badge="Pusat Informasi & Kabar"
+        title="Berita & Kegiatan Terbaru"
+        highlight="Sekolah Maitreyawira Palembang"
+        :breadcrumbs="[
+            ['label' => 'Berita & Informasi', 'url' => '']
+        ]"
+    />
 
     {{-- 3. KONTEN UTAMA & SIDEBAR --}}
     <section class="py-16 bg-slate-50 flex-grow">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            {{-- TAB FILTER KATEGORI UTAMA --}}
-            <div class="flex flex-wrap items-center justify-between gap-4 mb-10 pb-4 border-b border-slate-200" data-aos="fade-up">
-                <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
-                    <a href="{{ route('berita.index', array_filter(['q' => $search])) }}"
-                       class="px-5 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 flex items-center gap-2 {{ empty($category) || $category === 'semua' ? 'bg-[#1b2a6b] text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' }}">
-                        <span>Semua Kabar</span>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] {{ empty($category) || $category === 'semua' ? 'bg-amber-400 text-[#1b2a6b]' : 'bg-slate-100 text-slate-500' }}">{{ $totalSemua }}</span>
-                    </a>
-                    <a href="{{ route('berita.index', array_filter(['kategori' => 'berita', 'q' => $search, 'tag' => $activeTag])) }}"
-                       class="px-5 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 flex items-center gap-2 {{ $category === 'berita' ? 'bg-[#1b2a6b] text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' }}">
-                        <span>📰 Berita & Artikel</span>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] {{ $category === 'berita' ? 'bg-amber-400 text-[#1b2a6b]' : 'bg-slate-100 text-slate-500' }}">{{ $totalBerita }}</span>
-                    </a>
-                    <a href="{{ route('berita.index', array_filter(['kategori' => 'prestasi', 'q' => $search])) }}"
-                       class="px-5 py-2.5 rounded-xl text-xs font-extrabold transition shrink-0 flex items-center gap-2 {{ $category === 'prestasi' ? 'bg-[#1b2a6b] text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200' }}">
-                        <span>🏆 Prestasi & Pencapaian</span>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] {{ $category === 'prestasi' ? 'bg-amber-400 text-[#1b2a6b]' : 'bg-slate-100 text-slate-500' }}">{{ $totalPrestasi }}</span>
-                    </a>
-                </div>
+            {{-- BADGE FILTER AKTIF --}}
+            @if(!empty($search) || !empty($activeTag))
+                <div class="flex flex-wrap items-center gap-2 mb-8" data-aos="fade-up">
+                    <span class="text-xs font-bold text-slate-500">Filter Aktif:</span>
 
-                {{-- BADGE FILTER AKTIF --}}
-                <div class="flex flex-wrap items-center gap-2">
                     @if(!empty($search))
                         <div class="flex items-center gap-2 bg-amber-50 text-amber-800 px-3 py-1.5 rounded-lg border border-amber-200 text-xs font-bold">
-                            <span>🔍 {{ $search }}</span>
-                            <a href="{{ route('berita.index', array_filter(['kategori' => $category !== 'semua' ? $category : null, 'tag' => $activeTag])) }}" class="text-rose-500 hover:text-rose-700 ml-1 font-extrabold">✕</a>
+                            <span><i class="fa-solid fa-magnifying-glass"></i> {{ $search }}</span>
+                            <a href="{{ route('berita.index', array_filter(['tag' => $activeTag])) }}" class="text-rose-500 hover:text-rose-700 ml-1 font-extrabold" title="Hapus pencarian">
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
                         </div>
                     @endif
 
                     @if(!empty($activeTag))
                         <div class="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-200 text-xs font-bold">
                             <span>#{{ $activeTag }}</span>
-                            <a href="{{ route('berita.index', array_filter(['kategori' => $category !== 'semua' ? $category : null, 'q' => $search])) }}" class="text-rose-500 hover:text-rose-700 ml-1 font-extrabold">✕</a>
+                            <a href="{{ route('berita.index', array_filter(['q' => $search])) }}" class="text-rose-500 hover:text-rose-700 ml-1 font-extrabold" title="Hapus tag">
+                                <i class="fa-solid fa-xmark"></i>
+                            </a>
                         </div>
                     @endif
                 </div>
-            </div>
+            @endif
 
             <div class="grid lg:grid-cols-12 gap-12 items-start">
 
@@ -95,70 +65,61 @@
 
                     {{-- HEADER GRID --}}
                     <div class="flex flex-wrap items-center justify-between border-b border-slate-200 pb-3 gap-2" data-aos="fade-up">
-                        <h3 class="text-xl font-black text-slate-900">
-                            @if($category === 'prestasi')
-                                Prestasi & Penghargaan
-                            @elseif($category === 'berita')
-                                Artikel & Warta Sekolah
-                            @else
-                                Semua Kabar & Informasi
-                            @endif
-                        </h3>
+                        <h3 class="text-xl font-black text-slate-900">Artikel & Warta Sekolah</h3>
                         @if($posts->total() > 0)
                             <span class="text-xs text-slate-500 font-medium">
-                                Halaman <span class="font-bold text-blue-600">{{ $posts->currentPage() }}</span> dari <span class="font-bold text-slate-700">{{ $posts->lastPage() }}</span> (Total {{ $posts->total() }} Data)
+                                Halaman <span class="font-bold text-blue-600">{{ $posts->currentPage() }}</span> dari <span class="font-bold text-slate-700">{{ $posts->lastPage() }}</span> (Total {{ $posts->total() }} Artikel)
                             </span>
                         @else
-                            <span class="text-xs text-slate-500 font-medium">Menampilkan kabar terbaru</span>
+                            <span class="text-xs text-slate-500 font-medium">Menampilkan warta terbaru</span>
                         @endif
                     </div>
 
-                    {{-- GRID DAFTAR BERITA & PRESTASI --}}
+                    {{-- GRID DAFTAR BERITA --}}
                     <div class="grid sm:grid-cols-2 gap-6">
-                        @forelse($posts as $post)
+                        @forelse($posts as $index => $post)
                             @php
-                                $isPrestasi = ($post->type === 'prestasi');
                                 $thumb = $post->thumbnail;
                                 $fileName = basename($thumb ?? '');
 
-                                if ($isPrestasi) {
-                                    $imgUrl = 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?auto=format&fit=crop&w=600&q=80';
-                                } elseif (!empty($fileName) && file_exists(public_path('uploads/post/' . $fileName))) {
+                                if (!empty($fileName) && file_exists(public_path('uploads/post/' . $fileName))) {
                                     $imgUrl = asset('uploads/post/' . $fileName);
                                 } elseif (!empty($fileName) && file_exists(public_path('storage/post/' . $fileName))) {
                                     $imgUrl = asset('storage/post/' . $fileName);
+                                } elseif (!empty($thumb) && str_starts_with($thumb, 'http')) {
+                                    $imgUrl = $thumb;
                                 } else {
                                     $imgUrl = 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=600&q=80';
                                 }
                             @endphp
 
                             <div class="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-md transition group flex flex-col justify-between"
-                                 data-aos="fade-up" data-aos-delay="{{ ($loop->index % 2) * 100 }}">
+                                 data-aos="fade-up" data-aos-delay="{{ ($index % 2) * 100 }}">
                                 <div class="space-y-4">
-                                    <div class="h-48 bg-slate-200 overflow-hidden relative">
-                                        <img src="{{ $imgUrl }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                    <div class="h-48 bg-slate-100 overflow-hidden relative">
+                                        <img src="{{ $imgUrl }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy">
 
-                                        @if($isPrestasi)
-                                            <span class="absolute top-3 left-3 px-2.5 py-0.5 bg-amber-500 text-slate-900 font-black text-[10px] rounded-full uppercase tracking-wider shadow-xs">
-                                                🏆 Prestasi
-                                            </span>
-                                        @elseif($post->tags->count() > 0)
-                                            <span class="absolute top-3 left-3 px-2.5 py-0.5 bg-blue-600 text-white font-bold text-[10px] rounded-full uppercase tracking-wider shadow-xs">
+                                        @if($post->tags && $post->tags->count() > 0)
+                                            <span class="absolute top-3 left-3 px-2.5 py-1 bg-blue-600/90 text-white font-bold text-[10px] rounded-lg uppercase tracking-wider backdrop-blur-xs shadow-xs">
                                                 #{{ $post->tags->first()->post_tag_name }}
                                             </span>
                                         @else
-                                            <span class="absolute top-3 left-3 px-2.5 py-0.5 bg-blue-600 text-white font-bold text-[10px] rounded-full uppercase tracking-wider shadow-xs">
+                                            <span class="absolute top-3 left-3 px-2.5 py-1 bg-slate-900/80 text-white font-bold text-[10px] rounded-lg uppercase tracking-wider backdrop-blur-xs shadow-xs">
                                                 Berita
                                             </span>
                                         @endif
                                     </div>
                                     <div class="px-6 space-y-2">
-                                        <div class="text-[11px] text-slate-400 font-medium flex items-center gap-2">
-                                            <span>📅 {{ \Carbon\Carbon::parse($post->datetime_created)->translatedFormat('d M Y') }}</span>
-                                            @if(!$isPrestasi)
-                                                <span>•</span>
-                                                <span>👁️ {{ $post->total_views ?? 0 }}</span>
-                                            @endif
+                                        <div class="text-[11px] text-slate-400 font-medium flex items-center gap-3">
+                                            <span class="flex items-center gap-1">
+                                                <i class="fa-regular fa-calendar text-amber-500"></i>
+                                                {{ \Carbon\Carbon::parse($post->datetime_created)->translatedFormat('d M Y') }}
+                                            </span>
+                                            <span>•</span>
+                                            <span class="flex items-center gap-1">
+                                                <i class="fa-regular fa-eye text-blue-500"></i>
+                                                {{ $post->total_views ?? 0 }}
+                                            </span>
                                         </div>
                                         <h4 class="font-bold text-slate-900 text-base group-hover:text-blue-600 transition leading-snug line-clamp-2">
                                             <a href="{{ route('berita.show', $post->slug) }}">
@@ -170,16 +131,16 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="p-6 pt-4 border-t border-slate-100">
-                                    <a href="{{ route('berita.show', $post->slug) }}" class="text-xs font-bold text-blue-600 hover:text-blue-800 transition flex items-center gap-1">
-                                        <span>Lihat Detail</span>
-                                        <span>→</span>
+                                <div class="p-6 pt-4 border-t border-slate-100 mt-4">
+                                    <a href="{{ route('berita.show', $post->slug) }}" class="text-xs font-extrabold text-blue-600 hover:text-blue-800 transition flex items-center gap-1">
+                                        <span>Baca Selengkapnya</span>
+                                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
                                     </a>
                                 </div>
                             </div>
                         @empty
                             <div class="sm:col-span-2 p-12 text-center text-slate-400 italic bg-white rounded-2xl border border-dashed border-slate-200">
-                                Belum ada berita atau prestasi yang ditemukan.
+                                Belum ada berita atau artikel yang ditemukan.
                             </div>
                         @endforelse
                     </div>
@@ -248,9 +209,6 @@
                     <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-3">
                         <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider">Cari Berita</h3>
                         <form action="{{ route('berita.index') }}" method="GET" class="relative">
-                            @if(!empty($category) && $category !== 'semua')
-                                <input type="hidden" name="kategori" value="{{ $category }}">
-                            @endif
                             @if(!empty($activeTag))
                                 <input type="hidden" name="tag" value="{{ $activeTag }}">
                             @endif
@@ -266,40 +224,13 @@
                             </button>
 
                             @if(!empty($search))
-                                <a href="{{ route('berita.index', array_filter(['kategori' => $category !== 'semua' ? $category : null, 'tag' => $activeTag])) }}"
+                                <a href="{{ route('berita.index', array_filter(['tag' => $activeTag])) }}"
                                    class="absolute right-3 top-2.5 text-slate-400 hover:text-rose-500 font-bold text-xs"
                                    title="Hapus pencarian">
-                                    ✕
+                                    <i class="fa-solid fa-xmark"></i>
                                 </a>
                             @endif
                         </form>
-                    </div>
-
-                    <!-- Kategori Berita Utama -->
-                    <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-4">
-                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
-                            Kategori Utama
-                        </h3>
-                        <ul class="space-y-2 text-xs font-semibold text-slate-600">
-                            <li>
-                                <a href="{{ route('berita.index') }}" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition {{ empty($category) || $category === 'semua' ? 'text-blue-600 font-extrabold bg-blue-50' : '' }}">
-                                    <span>Semua Kabar</span>
-                                    <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[10px]">{{ $totalSemua }}</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('berita.index', ['kategori' => 'berita']) }}" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition {{ $category === 'berita' ? 'text-blue-600 font-extrabold bg-blue-50' : '' }}">
-                                    <span>Berita & Artikel Sekolah</span>
-                                    <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[10px]">{{ $totalBerita }}</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('berita.index', ['kategori' => 'prestasi']) }}" class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition {{ $category === 'prestasi' ? 'text-blue-600 font-extrabold bg-blue-50' : '' }}">
-                                    <span>Prestasi & Pencapaian</span>
-                                    <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 text-[10px]">{{ $totalPrestasi }}</span>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
 
                     <!-- Widget Post Tags -->
@@ -309,7 +240,7 @@
                         </h3>
                         <div class="flex flex-wrap gap-2">
                             @forelse($tags as $tag)
-                                <a href="{{ route('berita.index', array_filter(['tag' => $tag->post_tag_slug, 'kategori' => $category !== 'semua' ? $category : null, 'q' => $search])) }}"
+                                <a href="{{ route('berita.index', array_filter(['tag' => $tag->post_tag_slug, 'q' => $search])) }}"
                                    class="px-3 py-1.5 rounded-lg text-xs font-semibold border transition {{ $activeTag === $tag->post_tag_slug ? 'bg-blue-600 text-white border-blue-600' : 'bg-slate-50 text-slate-600 border-slate-200 hover:border-blue-400 hover:text-blue-600' }}">
                                     #{{ $tag->post_tag_name }}
                                     <span class="text-[10px] opacity-75">({{ $tag->posts_count }})</span>
@@ -318,6 +249,23 @@
                                 <span class="text-xs text-slate-400 italic">Belum ada tag berita.</span>
                             @endforelse
                         </div>
+                    </div>
+
+                    <!-- Menu Navigasi Sub-Halaman Media -->
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-4">
+                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
+                            Media & Informasi
+                        </h3>
+                        <nav class="flex flex-col gap-1 text-xs font-bold text-slate-600">
+                            <a href="/berita" class="flex items-center justify-between p-2.5 rounded-lg bg-blue-50 text-blue-600 font-extrabold">
+                                <span>Berita & Pengumuman</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </a>
+                            <a href="/galeri" class="flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition">
+                                <span>Galeri & Dokumentasi</span>
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                            </a>
+                        </nav>
                     </div>
 
                     <!-- Widget PPDB Call-to-Action -->

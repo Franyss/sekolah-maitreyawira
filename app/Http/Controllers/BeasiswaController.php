@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Scholarship;
+use App\Models\AppMenu;
 
 class BeasiswaController extends Controller
 {
     public function index()
     {
-        return view('pendaftaran-beasiswa');
+        // Ambil data menu app_menu untuk halaman pendaftaran-beasiswa
+        $menu = AppMenu::where('slug', 'pendaftaran-beasiswa')->first();
+
+        return view('pendaftaran-beasiswa', compact('menu'));
     }
 
     public function store(Request $request)
@@ -35,13 +39,13 @@ class BeasiswaController extends Controller
         // Upload Berkas Dokumen
         $docPath = null;
         if ($request->hasFile('up_doc_bea')) {
-            $docPath = $request->file('up_doc_bea')->store('scholarship_docs', 'public');
+            $docPath =$request->file('up_doc_bea')->store('scholarship_docs', 'public');
         }
 
         // Upload Galeri Foto
         $galleryPath = null;
         if ($request->hasFile('gallery')) {
-            $galleryPath = $request->file('gallery')->store('scholarship_gallery', 'public');
+            $galleryPath =$request->file('gallery')->store('scholarship_gallery', 'public');
         }
 
         // Simpan ke database dengan nama kolom yang sesuai di DB

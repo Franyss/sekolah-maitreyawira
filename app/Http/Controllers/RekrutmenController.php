@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Job;
 use App\Models\JobDetail;
 use App\Models\JobSource;
+use App\Models\AppMenu;
 use Illuminate\Support\Facades\DB;
 
 class RekrutmenController extends Controller
@@ -17,8 +18,7 @@ class RekrutmenController extends Controller
     {
         // Ambil lowongan dengan status aktif (status = 1) dan batas tanggal buka/tutup
         $jobs = Job::where('status', 1)
-            ->where(function ($query) {
-                $query->whereNull('datetime_close')
+            ->where(function ($query) {$query->whereNull('datetime_close')
                       ->orWhere('datetime_close', '>=', now());
             })
             ->orderBy('datetime_open', 'desc')
@@ -27,7 +27,10 @@ class RekrutmenController extends Controller
         // Ambil daftar sumber informasi karir
         $sources = JobSource::all();
 
-        return view('rekrutmen', compact('jobs', 'sources'));
+        // Ambil data menu app_menu untuk halaman rekrutmen
+        $menu = AppMenu::where('slug', 'rekrutmen')->first();
+
+        return view('rekrutmen', compact('jobs', 'sources', 'menu'));
     }
 
     /**
@@ -47,7 +50,7 @@ class RekrutmenController extends Controller
 
         $cvPath = null;
         if ($request->hasFile('cv_file')) {
-            $cvPath = $request->file('cv_file')->store('cv_applicants', 'public');
+            $cvPath =$request->file('cv_file')->store('cv_applicants', 'public');
         }
 
         // Simpan ke tabel job_detail
@@ -69,6 +72,6 @@ class RekrutmenController extends Controller
             ]);
         }
 
-        return back()->with('success', 'Lamaran pekerjaan berhasil dikirim!');
+        return back()->with('success', 'Lamaran pekerjaan berhasil dikirim! Tim HRD kami akan meninjau berkas Anda.');
     }
 }

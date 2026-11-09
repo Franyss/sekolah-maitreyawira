@@ -6,15 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\UniqueConstraintViolationException;
 
 class DataController extends Controller
 {
-    /**
-     * Daftar tabel yang diizinkan dikelola melalui dashboard
-     */
     protected $tables = [
         'user',
         'access',
@@ -57,9 +55,6 @@ class DataController extends Controller
         'testimony_detail',
     ];
 
-    /**
-     * Cari nama kolom Primary Key secara dinamis (id, user_id, dst)
-     */
     protected function getPrimaryKey($tableName, $columns)
     {
         if (in_array('id', $columns)) {
@@ -71,9 +66,6 @@ class DataController extends Controller
         return $columns[0] ?? 'id';
     }
 
-    /**
-     * Kolom yang dikecualikan dari form input (otomatis diisi sistem)
-     */
     protected function getExcludedColumns($tableName, $columns)
     {
         $primaryKey = $this->getPrimaryKey($tableName, $columns);
@@ -89,9 +81,12 @@ class DataController extends Controller
         ];
     }
 
-    /**
-     * Validasi keberadaan tabel
-     */
+    protected function isFileColumn($columnName)
+    {
+        $colLower = strtolower($columnName);
+        return (bool) preg_match('/(file|image|img|photo|foto|logo|icon|upload|avatar|header|bg|background|banner|doc|pdf|attachment|program_detail_content)/i', $colLower);
+    }
+
     protected function validateTable($tableName)
     {
         if (!in_array($tableName, $this->tables) || !Schema::hasTable($tableName)) {
@@ -99,9 +94,7 @@ class DataController extends Controller
         }
     }
 
-    /**
-     * Menampilkan daftar data tabel (Indeks Dashboard)
-     */
+    // METHOD INDEX
     public function index(Request $request, $tableName = null)
     {
         $tableName = $tableName ?? $request->query('table', 'user');
@@ -112,19 +105,30 @@ class DataController extends Controller
         $primaryKey = $this->getPrimaryKey($tableName, $columns);
         $excluded = $this->getExcludedColumns($tableName, $columns);
 
-        $rows = DB::table($tableName)
-            ->orderBy($primaryKey, 'desc')
+        $search = $request->query('search');
+        $query = DB::table($tableName);
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($columns, $search) {
+                foreach ($columns as $index => $column) {
+                    if ($index === 0) {
+                        $q->where($column, 'LIKE', "%{$search}%");
+                    } else {
+                        $q->orWhere($column, 'LIKE', "%{$search}%");
+                    }
+                }
+            });
+        }
+
+        $rows = $query->orderBy($primaryKey, 'desc')
             ->paginate(15)
             ->withQueryString();
 
         $formColumns = array_values(array_diff($columns, $excluded));
 
-        return view('data.index', compact('tables', 'tableName', 'columns', 'rows', 'formColumns', 'primaryKey'));
+        return view('data.index', compact('tables', 'tableName', 'columns', 'rows', 'formColumns', 'primaryKey', 'search'));
     }
 
-    /**
-     * Menampilkan Form Tambah Data Baru
-     */
     public function create(Request $request, $tableName)
     {
         $this->validateTable($tableName);
@@ -145,9 +149,6 @@ class DataController extends Controller
         ]);
     }
 
-    /**
-     * Menampilkan Form Edit Data
-     */
     public function edit(Request $request, $tableName, $id)
     {
         $this->validateTable($tableName);
@@ -173,9 +174,6 @@ class DataController extends Controller
         ]);
     }
 
-    /**
-     * Menyimpan Data Baru Ke Database
-     */
     public function store(Request $request, $tableName)
     {
         $this->validateTable($tableName);
@@ -186,22 +184,24 @@ class DataController extends Controller
 
         $data = $request->only($formColumns);
 
-        // Process File Uploads
         foreach ($formColumns as $column) {
             if ($request->hasFile($column)) {
                 $file = $request->file($column);
                 $data[$column] = $file->store('uploads/' . $tableName, 'public');
+            } elseif ($request->hasFile($column . '_file')) {
+                $file = $request->file($column . '_file');
+                $data[$column] = $file->store('uploads/' . $tableName, 'public');
+            } elseif ($this->isFileColumn($column) && empty($data[$column])) {
+                unset($data[$column]);
             }
         }
 
-        // Hash Password jika ada
         if (!empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
             unset($data['password']);
         }
 
-        // Auto Timestamps
         $now = now();
         if (in_array('created_at', $columns)) $data['created_at'] = $now;
         if (in_array('datetime_created', $columns)) $data['datetime_created'] = $now;
@@ -213,7 +213,7 @@ class DataController extends Controller
         } catch (UniqueConstraintViolationException $e) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Gagal menyimpan: Data ganda terdeteksi! Nilai yang Anda masukkan sudah terdaftar di sistem.');
+                ->with('error', 'Gagal menyimpan: Data ganda terdeteksi!');
         } catch (QueryException $e) {
             return redirect()->back()
                 ->withInput()
@@ -224,9 +224,6 @@ class DataController extends Controller
             ->with('success', "Data berhasil ditambahkan ke tabel '{$tableName}'!");
     }
 
-    /**
-     * Memperbarui Data di Database
-     */
     public function update(Request $request, $tableName, $id)
     {
         $this->validateTable($tableName);
@@ -236,22 +233,33 @@ class DataController extends Controller
         $excluded = $this->getExcludedColumns($tableName, $columns);
         $formColumns = array_values(array_diff($columns, $excluded));
 
+        $existingRow = DB::table($tableName)->where($primaryKey, $id)->first();
+        if (!$existingRow) {
+            abort(404, "Data tidak ditemukan pada tabel '{$tableName}'.");
+        }
+
         $data = $request->only($formColumns);
 
-        // Process File Uploads (Jangan hapus path lama jika file baru tidak diunggah)
         foreach ($formColumns as $column) {
             if ($request->hasFile($column)) {
+                if (!empty($existingRow->{$column}) && Storage::disk('public')->exists($existingRow->{$column})) {
+                    Storage::disk('public')->delete($existingRow->{$column});
+                }
                 $file = $request->file($column);
                 $data[$column] = $file->store('uploads/' . $tableName, 'public');
+            } elseif ($request->hasFile($column . '_file')) {
+                if (!empty($existingRow->{$column}) && Storage::disk('public')->exists($existingRow->{$column})) {
+                    Storage::disk('public')->delete($existingRow->{$column});
+                }
+                $file = $request->file($column . '_file');
+                $data[$column] = $file->store('uploads/' . $tableName, 'public');
             } else {
-                $colLower = strtolower($column);
-                if (preg_match('/(file|image|img|photo|foto|logo|icon|upload|avatar)/i', $colLower)) {
+                if ($this->isFileColumn($column) && empty($data[$column])) {
                     unset($data[$column]);
                 }
             }
         }
 
-        // Password Update Check
         if (array_key_exists('password', $data)) {
             if (empty($data['password'])) {
                 unset($data['password']);
@@ -260,7 +268,6 @@ class DataController extends Controller
             }
         }
 
-        // Auto Timestamps
         $now = now();
         if (in_array('updated_at', $columns)) $data['updated_at'] = $now;
         if (in_array('datetime_last_updated', $columns)) $data['datetime_last_updated'] = $now;
@@ -270,7 +277,7 @@ class DataController extends Controller
         } catch (UniqueConstraintViolationException $e) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Gagal memperbarui: Data ganda terdeteksi! Nilai yang Anda masukkan sudah digunakan.');
+                ->with('error', 'Gagal memperbarui: Data ganda terdeteksi!');
         } catch (QueryException $e) {
             return redirect()->back()
                 ->withInput()
@@ -281,9 +288,6 @@ class DataController extends Controller
             ->with('success', "Data pada tabel '{$tableName}' berhasil diperbarui!");
     }
 
-    /**
-     * Menghapus Data
-     */
     public function destroy($tableName, $id)
     {
         $this->validateTable($tableName);
@@ -291,7 +295,17 @@ class DataController extends Controller
         $columns = Schema::getColumnListing($tableName);
         $primaryKey = $this->getPrimaryKey($tableName, $columns);
 
-        DB::table($tableName)->where($primaryKey, $id)->delete();
+        $row = DB::table($tableName)->where($primaryKey, $id)->first();
+        if ($row) {
+            foreach ($columns as $column) {
+                if ($this->isFileColumn($column) && !empty($row->{$column})) {
+                    if (Storage::disk('public')->exists($row->{$column})) {
+                        Storage::disk('public')->delete($row->{$column});
+                    }
+                }
+            }
+            DB::table($tableName)->where($primaryKey, $id)->delete();
+        }
 
         return redirect()->route('data.index', ['tableName' => $tableName])
             ->with('success', "Data berhasil dihapus dari tabel '{$tableName}'!");

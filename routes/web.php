@@ -27,9 +27,11 @@ Route::get('/users', [UserController::class, 'index']);
 // --- NAVIGASI PROFIL & INFORMASI PUBLIK ---
 Route::get('/sejarah', [SejarahController::class, 'index'])->name('sejarah.index');
 Route::get('/visi-misi-motto', [VisiMisiController::class, 'index'])->name('visi-misi.index');
-Route::get('/program-unggulan', [ProgramUnggulanController::class, 'index'])->name('program-unggulan.index');
+Route::get('/program-unggulan', [ProgramUnggulanController::class, 'index'])->name('program.index');
+Route::get('/program-unggulan/{slug}', [ProgramUnggulanController::class, 'show'])->name('program.show');
 Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
 Route::get('/pencapaian', [PencapaianController::class, 'index'])->name('pencapaian.index');
+Route::get('/pencapaian/{slug}', [PencapaianController::class, 'show'])->name('pencapaian.show');
 
 // Testimoni Routes
 Route::get('/testimoni', [TestimoniController::class, 'index'])->name('testimoni.index');

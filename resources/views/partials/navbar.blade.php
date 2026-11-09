@@ -1,21 +1,42 @@
 {{-- File: resources/views/partials/navbar.blade.php --}}
+@php
+    // Ambil logo brand dari database app_config berdasarkan key app_logo
+    $logoVal = trim(\Illuminate\Support\Facades\DB::table('app_config')
+        ->where('conf_key', 'app_logo')
+        ->value('conf_value') ?? '');
+
+    // Resolusi Jalur Gambar Logo (Storage vs Public vs External URL vs Fallback)
+    if (empty($logoVal)) {
+        $navbarLogoUrl = asset('images/logo-smw.png');
+    } elseif (str_starts_with($logoVal, 'http://') || str_starts_with($logoVal, 'https://')) {
+        $navbarLogoUrl = $logoVal;
+    } elseif (file_exists(public_path('storage/' . $logoVal))) {
+        $navbarLogoUrl = asset('storage/' . $logoVal);
+    } elseif (file_exists(public_path($logoVal))) {
+        $navbarLogoUrl = asset($logoVal);
+    } elseif (file_exists(public_path('uploads/app_config/' . basename($logoVal)))) {
+        $navbarLogoUrl = asset('uploads/app_config/' . basename($logoVal));
+    } else {
+        $navbarLogoUrl = asset('storage/' . $logoVal);
+    }
+
+    // Ambil daftar sekolah dinamis dari tabel `school`
+    $schools = \Illuminate\Support\Facades\DB::table('school')->get();
+@endphp
+
 <header class="bg-white border-b border-slate-200/80 sticky top-0 z-50 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 
-        <!-- LOGO BRAND SEKOLAH MAITREYAWIRA -->
+        <!-- LOGO BRAND SEKOLAH MAITREYAWIRA (DINAMIS DARI app_logo) -->
         <a href="/" class="flex items-center gap-3 group shrink-0">
-            <img src="{{ asset('images/logo-smw.png') }}"
+            <img src="{{ $navbarLogoUrl }}"
                  alt="Logo Sekolah Maitreyawira Palembang"
-                 class="h-12 sm:h-14 w-auto object-contain transition duration-200 group-hover:scale-105">
+                 class="h-12 sm:h-14 w-auto object-contain transition duration-200 group-hover:scale-105"
+                 onerror="this.onerror=null; this.src='{{ asset('images/logo-smw.png') }}';">
         </a>
 
         <!-- MENU NAVIGASI DESKTOP -->
         <nav class="hidden lg:flex items-center gap-1 font-bold text-xs text-[#1b2a6b]">
-            @php
-                // Ambil daftar sekolah dinamis dari tabel `school`
-                $schools = \Illuminate\Support\Facades\DB::table('school')->get();
-            @endphp
-
             @if(isset($mainMenus) && $mainMenus->count() > 0)
                 {{-- NAVIGASI DINAMIS DARI DATABASE --}}
                 @foreach($mainMenus as $main)

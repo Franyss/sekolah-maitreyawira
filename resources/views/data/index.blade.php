@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manajemen Data - {{ ucfirst($tableName ?? 'Database') }}</title>
 
-    {{-- Asset Vite & Fallback CDN (Memastikan Styling Selalu Ter-load) --}}
+    {{-- Asset Vite & Fallback CDN --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -63,14 +63,36 @@
             @if(isset($tableName) && count($columns) > 0)
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
 
-                    <!-- Header Ringkasan Tabel -->
-                    <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <!-- Header Ringkasan Tabel & Form Pencarian -->
+                    <div class="p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gray-50/50">
                         <div class="flex items-center gap-2">
                             <i class="fa-solid fa-table text-indigo-600 text-sm"></i>
                             <h2 class="font-bold text-gray-700 uppercase tracking-wider text-xs">
                                 Data Tabel: {{ $tableName }} <span class="text-gray-400">({{ $rows->total() }} Total Record)</span>
                             </h2>
                         </div>
+
+                        <!-- Form Pencarian -->
+                        <form action="{{ route('data.index', $tableName) }}" method="GET" class="flex items-center gap-2">
+                            <div class="relative flex-grow sm:flex-grow-0">
+                                <input type="text"
+                                       name="search"
+                                       value="{{ request('search') }}"
+                                       placeholder="Cari data di tabel {{ $tableName }}..."
+                                       class="pl-9 pr-4 py-2 bg-white border border-gray-200 text-xs rounded-xl focus:outline-none focus:border-indigo-500 w-full sm:w-64 shadow-xs">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-xs"></i>
+                            </div>
+                            <button type="submit" class="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition-all shadow-xs flex items-center gap-1.5 cursor-pointer">
+                                <span>Cari</span>
+                            </button>
+                            @if(request('search'))
+                                <a href="{{ route('data.index', $tableName) }}"
+                                   class="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-semibold rounded-xl transition-all"
+                                   title="Hapus pencarian">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </a>
+                            @endif
+                        </form>
                     </div>
 
                     <!-- Display Data Tabel -->
@@ -140,7 +162,11 @@
                                     <tr>
                                         <td colspan="{{ count($columns) + 1 }}" class="text-center py-10 text-gray-400">
                                             <i class="fa-solid fa-folder-open text-3xl mb-2 text-gray-300 block"></i>
-                                            <span>Tidak ada data pada tabel <strong>{{ $tableName }}</strong>.</span>
+                                            @if(request('search'))
+                                                <span>Tidak ditemukan data yang cocok dengan kata kunci "<strong>{{ request('search') }}</strong>".</span>
+                                            @else
+                                                <span>Tidak ada data pada tabel <strong>{{ $tableName }}</strong>.</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforelse

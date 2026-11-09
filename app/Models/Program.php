@@ -17,4 +17,20 @@ class Program extends Model
         'program_slug',
         'program_content',
     ];
+
+    /**
+     * Relasi One to Many ke model ProgramDetail (tabel program_detail)
+     */
+    public function details()
+    {
+        return $this->hasMany(ProgramDetail::class, 'program_id', 'program_id');
+    }
+
+    /**
+     * Relasi HasOne (dijaga untuk backward compatibility)
+     */
+    public function detail()
+    {
+        return $this->hasOne(ProgramDetail::class, 'program_id', 'program_id');
+    }
 }

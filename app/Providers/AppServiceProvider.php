@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Blade; // <-- TAMBAHKAN FACADE BLADE
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,6 +17,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // DAFTARKAN FOLDER views/partials SEBAGAI LOKASI BLADE COMPONENT
+        Blade::anonymousComponentPath(resource_path('views/partials'));
+
         // Kirim data menu yang sudah terformat ke partial view navbar
         View::composer('partials.navbar', function ($view) {
             try {
@@ -25,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
                         ->orderBy('menu_id', 'asc')
                         ->get()
                         ->map(function ($menu) {
-                            // Jika 'link' NULL/kosong, gunakan nilai dari 'slug'[cite: 7]
+                            // Jika 'link' NULL/kosong, gunakan nilai dari 'slug'
                             if (!empty($menu->link)) {
                                 $menu->url = $menu->link;
                             } else {
@@ -35,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
                             return $menu;
                         });
 
-                    // Pisahkan Menu Utama (parent_id = 0) & Submenu[cite: 7]
+                    // Pisahkan Menu Utama (parent_id = 0) & Submenu
                     $mainMenus = $allMenus->filter(fn($m) => empty($m->parent_id) || $m->parent_id == 0);
                     $subMenus = $allMenus->filter(fn($m) => !empty($m->parent_id) && $m->parent_id > 0)
                                          ->groupBy('parent_id');

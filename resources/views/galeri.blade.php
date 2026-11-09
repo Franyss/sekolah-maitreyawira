@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galeri & Dokumentasi | Sekolah Maitreyawira Palembang</title>
 
-    {{-- CSS AOS & Tailwind --}}
+    {{-- CSS AOS Library, FontAwesome & Vite Tailwind --}}
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/app.css')
 </head>
 
@@ -17,36 +18,17 @@
     {{-- 1. HEADER / NAVBAR PARTIAL --}}
     @include('partials.navbar')
 
-    {{-- 2. HERO BANNER & BREADCRUMB --}}
-    <section class="relative bg-slate-900 text-white overflow-hidden py-16 sm:py-20">
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-blue-950/90 to-slate-900/80 z-10"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-15"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
-            <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center">
-                <a href="/" class="hover:text-amber-400 transition">Beranda</a>
-                <span>/</span>
-                <span class="text-slate-300">Media & Informasi</span>
-                <span>/</span>
-                <span class="text-amber-400">Galeri</span>
-            </nav>
-
-            <div class="max-w-3xl space-y-4">
-                <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-widest">
-                    Dokumentasi Kegiatan
-                </span>
-                <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-                    Galeri Foto & Video <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500">
-                        Sekolah Maitreyawira Palembang
-                    </span>
-                </h1>
-                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    Kumpulan rekam jejak visual aktivitas belajar-mengajar, kegiatan kebudayaan, perayaan hari besar, serta kebersamaan civitas akademika Sekolah Maitreyawira Palembang.
-                </p>
-            </div>
-        </div>
-    </section>
+    {{-- 2. HERO BANNER & BREADCRUMB (DINAMIS VIA BLADE COMPONENT <x-hero-banner>) --}}
+    <x-hero-banner
+        slug="galeri"
+        badge="Dokumentasi Kegiatan"
+        title="Galeri Foto & Video"
+        highlight="Sekolah Maitreyawira Palembang"
+        :breadcrumbs="[
+            ['label' => 'Media & Informasi', 'url' => '#'],
+            ['label' => 'Galeri', 'url' => '']
+        ]"
+    />
 
     {{-- 3. KONTEN UTAMA & SIDEBAR --}}
     <section class="py-16 bg-slate-50 flex-grow">
@@ -70,12 +52,14 @@
                                 Semua Momen
                             </a>
                             <a href="{{ route('galeri.index', array_filter(['type' => 'image', 'q' => request('q')])) }}"
-                               class="px-4 py-2 rounded-xl transition {{ request('type') == 'image' ? 'bg-[#1b2a6b] text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600' }}">
-                                📷 Foto & Gambar
+                               class="px-4 py-2 rounded-xl transition inline-flex items-center gap-1.5 {{ request('type') == 'image' ? 'bg-[#1b2a6b] text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600' }}">
+                                <i class="fa-solid fa-camera"></i>
+                                <span>Foto & Gambar</span>
                             </a>
                             <a href="{{ route('galeri.index', array_filter(['type' => 'video-embed', 'q' => request('q')])) }}"
-                               class="px-4 py-2 rounded-xl transition {{ request('type') == 'video-embed' ? 'bg-[#1b2a6b] text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600' }}">
-                                🎬 Video Dokumentasi
+                               class="px-4 py-2 rounded-xl transition inline-flex items-center gap-1.5 {{ request('type') == 'video-embed' ? 'bg-[#1b2a6b] text-white shadow-xs' : 'bg-slate-100 text-slate-600 hover:bg-blue-50 hover:text-blue-600' }}">
+                                <i class="fa-solid fa-video"></i>
+                                <span>Video Dokumentasi</span>
                             </a>
                         </div>
                     </div>
@@ -133,17 +117,24 @@
                                              @if(!$isVideo) onerror="this.onerror=null; this.src='https://maitreyawira-palembang.sch.id/uploads/gallery/{{ $fileName }}';" @endif>
 
                                         <!-- BADGE TIPE ('image' / 'video-embed') -->
-                                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-white text-[10px] font-bold backdrop-blur-xs uppercase tracking-wider {{ $isVideo ? 'bg-red-600' : 'bg-slate-900/80' }}">
-                                            {{ $isVideo ? '🎬 Video' : '📷 Foto' }}
+                                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-white text-[10px] font-bold backdrop-blur-xs uppercase tracking-wider flex items-center gap-1 {{ $isVideo ? 'bg-red-600' : 'bg-slate-900/80' }}">
+                                            @if($isVideo)
+                                                <i class="fa-solid fa-play text-[9px]"></i> Video
+                                            @else
+                                                <i class="fa-solid fa-image text-[9px]"></i> Foto
+                                            @endif
                                         </span>
 
-                                        <!-- OVERLAY THUMBNAIL VIDEO -->
+                                        <!-- OVERLAY THUMBNAIL VIDEO & TOMBOL PLAY SESUAI GAMBAR REFERENSI -->
                                         @if($isVideo)
                                             <a href="{{ str_starts_with($file, 'http') ? $file : 'https://www.youtube.com/watch?v=' . $file }}"
                                                target="_blank"
-                                               class="absolute inset-0 bg-slate-900/30 flex items-center justify-center group-hover:bg-slate-900/40 transition">
-                                                <div class="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg font-bold group-hover:scale-110 transition duration-300">
-                                                    ▶
+                                               class="absolute inset-0 bg-slate-950/30 flex items-center justify-center group-hover:bg-slate-950/40 transition">
+                                                <!-- LINGKARAN BIRU DENGAN TRIANGLE HITAM PRESISI -->
+                                                <div class="w-14 h-14 rounded-full bg-[#5057e5] hover:bg-[#4349d6] flex items-center justify-center shadow-xl group-hover:scale-110 transition duration-300 pl-1">
+                                                    <svg class="w-6 h-6 text-slate-950 fill-current" viewBox="0 0 24 24">
+                                                        <path d="M8 5v14l11-7z"/>
+                                                    </svg>
                                                 </div>
                                             </a>
                                         @endif
@@ -251,7 +242,7 @@
                                 <a href="{{ route('galeri.index', array_filter(['type' => request('type')])) }}"
                                    class="absolute right-3 top-2.5 text-slate-400 hover:text-rose-500 font-bold text-xs"
                                    title="Hapus pencarian">
-                                    ✕
+                                    <i class="fa-solid fa-xmark"></i>
                                 </a>
                             @endif
                         </form>

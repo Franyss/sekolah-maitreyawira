@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Testimoni Orang Tua Siswa | Maitreyawira Palembang</title>
 
-    {{-- CSS AOS & Tailwind --}}
+    {{-- CSS AOS & Vite Tailwind --}}
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     @vite('resources/css/app.css')
 </head>
@@ -17,36 +17,17 @@
     {{-- 1. HEADER / NAVBAR PARTIAL --}}
     @include('partials.navbar')
 
-    {{-- 2. HERO BANNER & BREADCRUMB --}}
-    <section class="relative bg-slate-900 text-white overflow-hidden py-16 sm:py-20">
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-blue-950/90 to-slate-900/80 z-10"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-15"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
-            <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center">
-                <a href="/" class="hover:text-amber-400 transition">Beranda</a>
-                <span>/</span>
-                <span class="text-slate-300">Tentang Kami</span>
-                <span>/</span>
-                <span class="text-amber-400">Testimoni</span>
-            </nav>
-
-            <div class="max-w-3xl space-y-4">
-                <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-widest">
-                    Kepercayaan Orang Tua
-                </span>
-                <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-                    Testimoni Orang Tua Siswa <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500">
-                        Sekolah Maitreyawira Palembang
-                    </span>
-                </h1>
-                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    Pengalaman, pandangan, dan ucapan terima kasih dari para orang tua murid terhadap perkembangan pendidikan karakter serta keunggulan akademis putra-putrinya.
-                </p>
-            </div>
-        </div>
-    </section>
+    {{-- 2. HERO BANNER & BREADCRUMB (DINAMIS VIA BLADE COMPONENT <x-hero-banner>) --}}
+    <x-hero-banner
+        slug="testimoni"
+        badge="Kepercayaan Orang Tua"
+        title="Testimoni Orang Tua Siswa"
+        highlight="Sekolah Maitreyawira Palembang"
+        :breadcrumbs="[
+            ['label' => 'Tentang Kami', 'url' => '#'],
+            ['label' => 'Testimoni', 'url' => '']
+        ]"
+    />
 
     {{-- 3. KONTEN UTAMA --}}
     <section class="py-16 bg-slate-50 flex-grow">
@@ -65,42 +46,44 @@
 
             <!-- GRID TESTIMONI DARI DATABASE -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                @forelse($testimonies as $item)
-                    <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between space-y-6"
-                         data-aos="fade-up" data-aos-delay="{{ 150 + ($loop->index * 100) }}">
-                        <div class="space-y-4">
-                            <!-- BADGE TINGKATAN -->
-                            <div class="flex items-center justify-between">
-                                <span class="px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-800 border border-amber-200 uppercase tracking-wider">
-                                    {{ $item->testimony_title }}
-                                </span>
-                                <svg class="w-8 h-8 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
-                                </svg>
+                @if(!empty($testimonies) && count($testimonies) > 0)
+                    @foreach($testimonies as $index => $item)
+                        <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between space-y-6"
+                             data-aos="fade-up" data-aos-delay="{{ 150 + ($index * 100) }}">
+                            <div class="space-y-4">
+                                <!-- BADGE TINGKATAN -->
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 rounded-full text-xs font-black bg-amber-100 text-amber-800 border border-amber-200 uppercase tracking-wider">
+                                        {{ $item->testimony_title }}
+                                    </span>
+                                    <svg class="w-8 h-8 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                                    </svg>
+                                </div>
+
+                                <!-- ISI TESTIMONI -->
+                                <div class="text-slate-700 text-sm sm:text-base leading-relaxed space-y-2">
+                                    {!! nl2br(e($item->testimony_content)) !!}
+                                </div>
                             </div>
 
-                            <!-- ISI TESTIMONI -->
-                            <div class="text-slate-700 text-sm sm:text-base leading-relaxed space-y-2">
-                                {!! nl2br(e($item->testimony_content)) !!}
+                            <!-- FOOTER KARTU -->
+                            <div class="pt-4 border-t border-slate-100 flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-blue-900 text-amber-400 font-extrabold flex items-center justify-center text-sm border border-blue-800 shadow-xs">
+                                    {{ strtoupper(substr($item->testimony_title, 10, 2) ?: 'MW') }}
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-slate-900">Orang Tua Siswa</h4>
+                                    <p class="text-xs text-slate-500 font-medium">{{ $item->testimony_title }} Maitreyawira</p>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- FOOTER KARTU -->
-                        <div class="pt-4 border-t border-slate-100 flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-blue-900 text-amber-400 font-extrabold flex items-center justify-center text-sm border border-blue-800 shadow-xs">
-                                {{ strtoupper(substr($item->testimony_title, 10, 2) ?: 'MW') }}
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-slate-900">Orang Tua Siswa</h4>
-                                <p class="text-xs text-slate-500 font-medium">{{ $item->testimony_title }} Maitreyawira</p>
-                            </div>
-                        </div>
-                    </div>
-                @empty
+                    @endforeach
+                @else
                     <div class="md:col-span-2 bg-white rounded-2xl p-8 text-center text-slate-400 italic border border-dashed border-slate-300" data-aos="fade-up">
                         Belum ada data testimoni yang ditambahkan ke database.
                     </div>
-                @endforelse
+                @endif
             </div>
 
         </div>
