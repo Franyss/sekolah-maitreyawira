@@ -134,25 +134,40 @@
                                 @endif
                             @endif
 
-                            <!-- 3. PEMUTAR VIDEO YOUTUBE (achievement_detail_youtube_link) -->
+                            <!-- 3. KARTU PREVIEW THUMBNAIL YOUTUBE (achievement_detail_youtube_link) -->
                             @if(!empty($itemDetail->achievement_detail_youtube_link))
                                 @php
                                     $ytId = '';
                                     if (preg_match('/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/', $itemDetail->achievement_detail_youtube_link, $matches)) {
                                         $ytId = $matches[1];
                                     }
+
+                                    $ytThumbUrl = "https://img.youtube.com/vi/{$ytId}/maxresdefault.jpg";
+                                    $ytThumbFallback = "https://img.youtube.com/vi/{$ytId}/hqdefault.jpg";
+                                    $ytWatchUrl = "https://www.youtube.com/watch?v={$ytId}";
                                 @endphp
 
                                 @if(!empty($ytId))
                                     <div class="my-4 space-y-2">
                                         <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Video Dokumentasi Kejuaraan:</h4>
-                                        <div class="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200 aspect-video bg-slate-900">
-                                            <iframe class="w-full h-full"
-                                                    src="https://www.youtube.com/embed/{{ $ytId }}"
-                                                    title="Video {{ $itemDetail->achievement_detail_desc }}"
-                                                    frameborder="0"
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                    allowfullscreen></iframe>
+
+                                        <!-- KARTU PREVIEW THUMBNAIL YOUTUBE -->
+                                        <div class="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200 aspect-video bg-slate-900 group">
+                                            <img src="{{ $ytThumbUrl }}"
+                                                 alt="Thumbnail YouTube {{ $itemDetail->achievement_detail_desc }}"
+                                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                                 onerror="this.onerror=null; this.src='{{ $ytThumbFallback }}';">
+
+                                            <!-- OVERLAY & TOMBOL PLAY YOUTUBE DESAIN BLUE-INDIGO + PLAY ICON HITAM -->
+                                            <a href="{{ $ytWatchUrl }}"
+                                               target="_blank"
+                                               rel="noopener noreferrer"
+                                               title="Tonton Video di YouTube"
+                                               class="absolute inset-0 bg-slate-950/40 hover:bg-slate-950/20 transition flex items-center justify-center group/btn">
+                                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#4f56e9] hover:bg-[#3d44d4] flex items-center justify-center shadow-xl border border-indigo-400/40 transform group-hover/btn:scale-110 transition duration-300">
+                                                    <i class="fa-solid fa-play text-2xl sm:text-3xl text-slate-950 translate-x-0.5"></i>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 @endif

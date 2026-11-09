@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/app.css')
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white flex flex-col min-h-screen overflow-x-hidden">
@@ -24,7 +25,7 @@
         <div class="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-15"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
-            <!-- Breadcrumb -->
+            <!-- Breadcrumb Navigasi -->
             <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center flex-wrap">
                 <a href="/" class="hover:text-amber-400 transition">Beranda</a>
                 <span>/</span>
@@ -34,10 +35,20 @@
             </nav>
 
             <div class="max-w-4xl space-y-4">
-                <!-- Badge Kategori -->
-                <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-widest">
-                    📰 Berita & Artikel
-                </span>
+                <!-- Badge Kategori & Unit Sekolah (post_school) -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-widest">
+                        📰 Berita & Artikel
+                    </span>
+
+                    @if($post->schools && $post->schools->count() > 0)
+                        @foreach($post->schools as $sch)
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-black bg-amber-500 text-slate-950 uppercase tracking-widest shadow-xs">
+                                <i class="fa-solid fa-school text-[10px] mr-1"></i>{{ $sch->sch_name ?? $sch->school_name ?? $sch->name ?? 'Sekolah' }}
+                            </span>
+                        @endforeach
+                    @endif
+                </div>
 
                 <!-- Judul Artikel -->
                 <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white">
@@ -48,7 +59,7 @@
                 <div class="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-300 pt-2 border-t border-slate-800">
                     <div class="flex items-center gap-1.5">
                         <i class="fa-regular fa-user text-amber-400"></i>
-                        <span>{{ $post->author->first_name ?? 'Humas Maitreyawira' }}</span>
+                        <span>{{ $post->author->name ?? $post->author->username ?? 'Humas Maitreyawira' }}</span>
                     </div>
                     <span>•</span>
                     <div class="flex items-center gap-1.5">
@@ -74,7 +85,7 @@
                 <main class="lg:col-span-8 space-y-8">
                     <article class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6" data-aos="fade-up">
 
-                        <!-- Gambar Sampul / Thumbnail -->
+                        <!-- GAMBAR SAMPUL / THUMBNAIL ARTIKEL -->
                         @php
                             $thumb = $post->thumbnail;
                             $fileName = basename($thumb ?? '');
@@ -96,12 +107,26 @@
                                  class="w-full h-full object-cover">
                         </div>
 
-                        <!-- Isi Teks Artikel -->
+                        <!-- LIST UNIT SEKOLAH DALAM KARTU ARTIKEL -->
+                        @if($post->schools && $post->schools->count() > 0)
+                            <div class="flex flex-wrap items-center gap-2 p-4 bg-amber-50/60 border border-amber-200/70 rounded-xl">
+                                <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-school text-amber-500"></i> Unit Sekolah Terkait:
+                                </span>
+                                @foreach($post->schools as $sch)
+                                    <span class="px-2.5 py-1 bg-amber-500 text-slate-950 rounded-lg text-xs font-black shadow-xs">
+                                        {{ $sch->sch_name ?? $sch->school_name ?? $sch->name ?? 'Sekolah' }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <!-- ISI TEKS ARTIKEL -->
                         <div class="prose prose-slate max-w-none text-slate-700 text-sm sm:text-base leading-relaxed space-y-4 pt-2">
                             {!! $post->content !!}
                         </div>
 
-                        <!-- Tags & Kembali -->
+                        <!-- TAG BERITA & NAVIGASI KEMBALI -->
                         <div class="pt-6 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
                             @if(isset($post->tags) && $post->tags->count() > 0)
                                 <div class="flex flex-wrap items-center gap-2">
@@ -129,7 +154,7 @@
                 <!-- SIDEBAR NAVIGASI & ARTIKEL TERBARU (4 Kolom) -->
                 <aside class="lg:col-span-4 space-y-6 sticky top-28" data-aos="fade-left" data-aos-delay="200">
 
-                    <!-- Widget Berita Terbaru -->
+                    <!-- WIDGET BERITA TERBARU -->
                     <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-4">
                         <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
                             Kabar Terbaru Lainnya
@@ -154,6 +179,17 @@
                                          alt="{{ $recent->title }}"
                                          class="w-16 h-16 rounded-xl object-cover shrink-0 border border-slate-100 group-hover:scale-105 transition duration-300">
                                     <div class="space-y-1">
+                                        <!-- BADGE UNIT SEKOLAH (POST_SCHOOL) PADA SIDEBAR -->
+                                        @if($recent->schools && $recent->schools->count() > 0)
+                                            <div class="flex flex-wrap gap-1">
+                                                @foreach($recent->schools as $rsch)
+                                                    <span class="text-[9px] font-black text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 uppercase">
+                                                        {{ $rsch->sch_name ?? $rsch->school_name ?? $rsch->name ?? 'Sekolah' }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
+                                        @endif
+
                                         <h4 class="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition leading-snug line-clamp-2">
                                             {{ $recent->title }}
                                         </h4>
@@ -169,7 +205,7 @@
                         </div>
                     </div>
 
-                    <!-- Widget Post Tags -->
+                    <!-- WIDGET TAG BERITA -->
                     <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-4">
                         <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
                             Tag Berita
@@ -186,7 +222,7 @@
                         </div>
                     </div>
 
-                    <!-- Widget PPDB Call-to-Action -->
+                    <!-- WIDGET PPDB CALL-TO-ACTION -->
                     <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl p-6 text-slate-900 shadow-md space-y-4" data-aos="fade-up">
                         <div class="font-black text-lg leading-tight">
                             Bergabung Bersama Keluarga Maitreyawira!
@@ -208,7 +244,7 @@
     {{-- 4. FOOTER PARTIAL --}}
     @include('partials.footer')
 
-    {{-- JS AOS --}}
+    {{-- JS AOS Library --}}
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

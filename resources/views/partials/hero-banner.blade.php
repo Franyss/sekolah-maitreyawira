@@ -1,4 +1,4 @@
-{{-- File: resources/views/components/hero-banner.blade.php --}}
+{{-- File: resources/views/partials/hero-banner.blade.php --}}
 @props([
     'slug' => '',
     'badge' => '',
@@ -8,6 +8,12 @@
 ])
 
 @php
+    $slug = $slug ?? '';
+    $badge = $badge ?? '';
+    $title = $title ?? '';
+    $highlight = $highlight ?? '';
+    $breadcrumbs = $breadcrumbs ?? [];
+
     // Ambil data menu berdasarkan slug
     $menu = \App\Models\AppMenu::where('slug', $slug)->first();
     $bgHeader = trim($menu->background_header ?? '');
@@ -29,37 +35,35 @@
     $displayTitle = !empty($title) ? $title : ($menu->title ?? '');
 @endphp
 
-<section class="relative bg-slate-950 text-white overflow-hidden py-16 sm:py-20 min-h-[280px]">
+<section class="relative bg-slate-950 text-white overflow-hidden h-[300px] sm:h-[400px] lg:h-[480px] flex items-center">
     <!-- GAMBAR BACKGROUND DINAMIS DARI TABEL APP_MENU -->
     <div class="absolute inset-0 z-0">
         <img src="{{ $headerBgUrl }}"
              alt="Header Background"
              class="w-full h-full object-cover object-center"
              onerror="this.onerror=null; this.src='{{ asset('images/slider-ppdb.jpg') }}';">
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/75 to-slate-900/50 z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/60 to-transparent z-10"></div>
     </div>
 
     <!-- KONTEN TEKS HERO & BREADCRUMB -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
+    <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20" data-aos="fade-down" data-aos-duration="1000">
         @if(!empty($breadcrumbs) && is_array($breadcrumbs))
             <nav class="flex text-xs font-semibold text-slate-400 mb-4 gap-2 items-center flex-wrap">
                 <a href="/" class="hover:text-amber-400 transition">Beranda</a>
-                @php
-                    foreach ($breadcrumbs as $crumb) {
-                        echo '<span>/</span>';
-                        if (!empty($crumb['url']) && $crumb['url'] !== '#') {
-                            echo '<a href="' . e($crumb['url']) . '" class="hover:text-amber-400 transition">' . e($crumb['label']) . '</a>';
-                        } else {
-                            echo '<span class="text-amber-400">' . e($crumb['label']) . '</span>';
-                        }
-                    }
-                @endphp
+                @foreach($breadcrumbs as $crumb)
+                    <span>/</span>
+                    @if(!empty($crumb['url']) && $crumb['url'] !== '#')
+                        <a href="{{ $crumb['url'] }}" class="hover:text-amber-400 transition">{{ $crumb['label'] }}</a>
+                    @else
+                        <span class="text-amber-400">{{ $crumb['label'] }}</span>
+                    @endif
+                @endforeach
             </nav>
         @endif
 
         <div class="max-w-3xl space-y-4">
             @if(!empty($badge))
-                <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-widest">
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-extrabold bg-amber-500/10 text-amber-400 border border-amber-500/30 uppercase tracking-widest">
                     {{ $badge }}
                 </span>
             @endif
@@ -68,7 +72,7 @@
                 {{ $displayTitle }}
                 @if(!empty($highlight))
                     <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500">
+                    <span class="text-amber-400 font-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
                         {{ $highlight }}
                     </span>
                 @endif

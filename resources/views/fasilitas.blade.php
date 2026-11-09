@@ -7,17 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fasilitas Sekolah | Maitreyawira Palembang</title>
 
-    {{-- CSS AOS & Vite Tailwind --}}
+    {{-- CSS AOS Library, FontAwesome & Vite Tailwind --}}
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/app.css')
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white flex flex-col min-h-screen overflow-x-hidden">
 
-    {{-- 1. HEADER / NAVBAR PARTIAL --}}
+    {{-- 1. NAVBAR PARTIAL --}}
     @include('partials.navbar')
 
-    {{-- 2. HERO BANNER & BREADCRUMB (DINAMIS VIA BLADE COMPONENT <x-hero-banner>) --}}
+    {{-- 2. HERO BANNER & BREADCRUMB --}}
     <x-hero-banner
         slug="fasilitas"
         badge="Sarana & Prasarana"
@@ -34,7 +36,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
 
             <!-- INTRO KAMPUS -->
-            <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm space-y-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-4" data-aos="fade-up" data-aos-delay="100">
                 <div class="border-b border-slate-100 pb-4">
                     <h2 class="text-2xl font-black text-slate-900">Sarana Penunjang Pendidikan Terpadu</h2>
                     <p class="text-xs text-blue-600 font-bold uppercase tracking-wider mt-1">Lingkungan Kondusif, Nyaman & Asri</p>
@@ -52,7 +54,7 @@
                             $photo = trim($facility->facility_photo ?? '');
                             $fileName = basename($photo);
 
-                            // Jalur gambar lokal vs server resmi
+                            // Jalur gambar lokal vs server
                             if (!empty($fileName) && file_exists(public_path('uploads/facility/' . $fileName))) {
                                 $imgUrl = asset('uploads/facility/' . $fileName);
                             } elseif (!empty($fileName) && file_exists(public_path('storage/facility/' . $fileName))) {
@@ -64,45 +66,43 @@
                             }
                         @endphp
 
-                        <div class="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between group"
-                             data-aos="fade-up" data-aos-delay="{{ 100 + ($index % 3) * 100 }}">
+                        <!-- KARTU FASILITAS DENGAN TAUTAN KE HALAMAN DETAIL -->
+                        <a href="{{ route('fasilitas.show', $facility->facility_id) }}"
+                           class="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-lg transition duration-300 flex flex-col justify-between group block transform hover:-translate-y-1"
+                           data-aos="fade-up" data-aos-delay="{{ 100 + ($index % 3) * 100 }}">
+
                             <div>
                                 {{-- GAMBAR FASILITAS --}}
-                                <div class="h-48 overflow-hidden bg-slate-100 relative">
+                                <div class="h-52 overflow-hidden bg-slate-100 relative">
                                     <img src="{{ $imgUrl }}"
                                          alt="{{ $facility->facility_title }}"
                                          class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                                          loading="lazy"
                                          onerror="this.onerror=null; this.src='https://maitreyawira-palembang.sch.id/uploads/facility/{{ $fileName }}';">
+
+                                    <div class="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/0 transition duration-300"></div>
                                 </div>
 
-                                {{-- DESKRIPSI FASILITAS --}}
+                                {{-- DESKRIPSI RINGKAS FASILITAS --}}
                                 <div class="p-6 space-y-3">
-                                    <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">
+                                    <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition leading-snug">
                                         {{ $facility->facility_title }}
                                     </h3>
-                                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">
+                                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed line-clamp-3">
                                         {{ $facility->facility_desc }}
                                     </p>
                                 </div>
                             </div>
 
-                            {{-- TAMPILKAN RINCIAN JIKA ADA KONTEN DETAIL --}}
-                            @if(isset($facility->details) && count($facility->details) > 0)
-                                <div class="px-6 pb-6 pt-2 border-t border-slate-100 mt-auto">
-                                    @foreach($facility->details as $detail)
-                                        @if($detail->facility_detail_desc)
-                                            <p class="text-xs text-slate-500 italic">
-                                                {{ $detail->facility_detail_desc }}
-                                            </p>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            @endif
-                        </div>
+                            {{-- FOOTER TAUTAN DETAIL --}}
+                            <div class="px-6 pb-6 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between text-xs font-bold text-blue-600 group-hover:text-blue-700">
+                                <span>Lihat Detail Fasilitas</span>
+                                <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition"></i>
+                            </div>
+                        </a>
                     @endforeach
                 @else
-                    {{-- FALLBACK DATA RESMI JIKA DATABASE MASIH KOSONG --}}
+                    {{-- FALLBACK DAFTAR JIKA DATABASE KOSONG --}}
                     <div class="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm" data-aos="fade-up" data-aos-delay="100">
                         <img src="https://maitreyawira-palembang.sch.id/uploads/facility/fasilitas-thumbnail-20210302140814.jpeg" alt="Galeri Edukasi dan Budaya Cinta Alam" class="w-full h-48 object-cover">
                         <div class="p-6 space-y-2">
@@ -135,7 +135,7 @@
     {{-- 4. FOOTER PARTIAL --}}
     @include('partials.footer')
 
-    {{-- JS AOS --}}
+    {{-- SCRIPT INISIALISASI ANIMASI AOS --}}
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -148,4 +148,5 @@
         });
     </script>
 </body>
+
 </html>

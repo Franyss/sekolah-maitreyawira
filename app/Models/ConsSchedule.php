@@ -20,4 +20,12 @@ class ConsSchedule extends Model
         'sta',
         'datetime_apply',
     ];
+
+    /**
+     * Relasi Belongs-To ke ConsultationSet (Foreign Key: cons_id)
+     */
+    public function consultationSet()
+    {
+        return $this->belongsTo(ConsultationSet::class, 'cons_id', 'cons_id');
+    }
 }

@@ -18,4 +18,21 @@ class FasilitasController extends Controller
 
         return view('fasilitas', compact('facilities', 'menu'));
     }
+
+    /**
+     * Menampilkan detail fasilitas berdasarkan facility_id
+     */
+    public function show($id)
+    {
+        // Ambil data fasilitas beserta rincian detail dari tabel facility_detail
+        $facility = Facility::with('details')->findOrFail($id);
+
+        // Ambil fasilitas lainnya untuk disajikan di sidebar
+        $otherFacilities = Facility::where('facility_id', '!=',$id)
+            ->orderBy('facility_id', 'asc')
+            ->take(5)
+            ->get();
+
+        return view('fasilitas-detail', compact('facility', 'otherFacilities'));
+    }
 }

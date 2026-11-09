@@ -84,7 +84,7 @@
                         </div>
                     </a>
                     <a href="{{ url('/data/achievement') }}"
-                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ (request()->is('data/achievement') && !request()->is('data/achievement_detail*')) || request()->query('table') === 'achievement' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ (request()->is('data/achievement') && !request()->is('data/achievement_detail*')) || (request()->query('table') === 'achievement' && !request()->is('data/achievement_detail*')) ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
                         <div class="flex items-center gap-2.5">
                             <i class="fa-solid fa-trophy text-xs w-4"></i>
                             <span>Prestasi (`achievement`)</span>
@@ -98,10 +98,17 @@
                         </div>
                     </a>
                     <a href="{{ url('/data/consultation_set') }}"
-                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/consultation_set') || request()->query('table') === 'consultation_set' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ (request()->is('data/consultation_set') && !request()->is('data/cons_schedule*')) || (request()->query('table') === 'consultation_set' && !request()->is('data/cons_schedule*')) ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
                         <div class="flex items-center gap-2.5">
                             <i class="fa-solid fa-comments text-xs w-4"></i>
-                            <span>Konsultasi (`consultation_set`)</span>
+                            <span>Sesi Konsultasi (`consultation_set`)</span>
+                        </div>
+                    </a>
+                    <a href="{{ url('/data/cons_schedule') }}"
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/cons_schedule*') || request()->query('table') === 'cons_schedule' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-calendar-check text-xs w-4"></i>
+                            <span>Pengajuan Konsultasi (`cons_schedule`)</span>
                         </div>
                     </a>
                     <a href="{{ url('/data/testimony') }}"
@@ -161,10 +168,17 @@
                 <span class="px-3 text-[10px] font-bold text-gray-500 uppercase tracking-wider">Fasilitas & Galeri</span>
                 <div class="mt-1 space-y-0.5">
                     <a href="{{ url('/data/facility') }}"
-                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/facility*') || request()->query('table') === 'facility' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ (request()->is('data/facility') && !request()->is('data/facility_detail*')) || (request()->query('table') === 'facility' && !request()->is('data/facility_detail*')) ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
                         <div class="flex items-center gap-2.5">
                             <i class="fa-solid fa-building text-xs w-4"></i>
                             <span>Fasilitas (`facility`)</span>
+                        </div>
+                    </a>
+                    <a href="{{ url('/data/facility_detail') }}"
+                       class="flex items-center justify-between px-3.5 py-2 rounded-lg {{ request()->is('data/facility_detail*') || request()->query('table') === 'facility_detail' ? 'bg-indigo-600 text-white font-medium' : 'hover:bg-white/5 hover:text-white' }}">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-list-check text-xs w-4"></i>
+                            <span>Detail Fasilitas (`facility_detail`)</span>
                         </div>
                     </a>
                     <a href="{{ url('/data/gallery') }}"

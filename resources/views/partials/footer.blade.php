@@ -15,6 +15,12 @@
         ])
         ->pluck('conf_value', 'conf_key');
 
+    // Ambil data jam layanan (service_hour) yang aktif (sta = 1)
+    $serviceHours = $serviceHours ?? \Illuminate\Support\Facades\DB::table('service_hour')
+        ->where('sta', 1)
+        ->orderBy('id', 'asc')
+        ->get();
+
     // Data Kontak
     $email = $footerConfigs['app_content_std_reg_email'] ?? 'admin@maitreyawira-ds.sch.id';
     $phone = $footerConfigs['app_content_std_reg_phone'] ?? '6285362887968';
@@ -152,7 +158,7 @@
             </ul>
         </div>
 
-        <!-- 4. HUBUNGI KAMI & INFORMASI LAYANAN (DINAMIS DARI app_config) -->
+        <!-- 4. HUBUNGI KAMI & JAM LAYANAN (DINAMIS DARI app_config & service_hour) -->
         <div>
             <h4 class="text-white font-bold text-sm uppercase tracking-wider mb-4 border-b border-slate-800 pb-2">
                 Hubungi Kami
@@ -181,10 +187,25 @@
                     <a href="mailto:{{ $email }}" class="hover:text-amber-400 transition">{{ $email }}</a>
                 </p>
 
-                <p class="flex items-center gap-2 pt-1">
-                    <span class="shrink-0">🕒</span>
-                    <span>Senin - Jumat: 07:00 - 15:00 WIB</span>
-                </p>
+                {{-- Jam Layanan Dinamis (tabel service_hour) --}}
+                @if(isset($serviceHours) && count($serviceHours) > 0)
+                    <div class="pt-1 space-y-1.5 border-t border-slate-900 mt-2">
+                        @foreach($serviceHours as $sh)
+                            <p class="flex items-start gap-2">
+                                <span class="shrink-0">🕒</span>
+                                <span>
+                                    <strong class="text-slate-300 font-semibold">{{ $sh->service_day }}:</strong>
+                                    {{ \Carbon\Carbon::parse($sh->hour_from)->format('H:i') }} - {{ \Carbon\Carbon::parse($sh->hour_to)->format('H:i') }} WIB
+                                </span>
+                            </p>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="flex items-center gap-2 pt-1 border-t border-slate-900 mt-2">
+                        <span class="shrink-0">🕒</span>
+                        <span>Senin - Jumat: 08:00 - 16:00 WIB</span>
+                    </p>
+                @endif
             </div>
         </div>
 

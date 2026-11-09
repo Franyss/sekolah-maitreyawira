@@ -18,6 +18,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VisiMisiController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\BeasiswaController;
+use App\Http\Controllers\KonsultasiController;
 use Illuminate\Support\Facades\Route;
 
 // --- HALAMAN UTAMA & PUBLIK ---
@@ -30,6 +31,7 @@ Route::get('/visi-misi-motto', [VisiMisiController::class, 'index'])->name('visi
 Route::get('/program-unggulan', [ProgramUnggulanController::class, 'index'])->name('program.index');
 Route::get('/program-unggulan/{slug}', [ProgramUnggulanController::class, 'show'])->name('program.show');
 Route::get('/fasilitas', [FasilitasController::class, 'index'])->name('fasilitas.index');
+Route::get('/fasilitas/{id}', [FasilitasController::class, 'show'])->name('fasilitas.show');
 Route::get('/pencapaian', [PencapaianController::class, 'index'])->name('pencapaian.index');
 Route::get('/pencapaian/{slug}', [PencapaianController::class, 'show'])->name('pencapaian.show');
 
@@ -58,6 +60,9 @@ Route::get('/form/{formType?}', function ($formType = 'hubungi-kami') {
 
 // Rute Submisi Form (POST)
 Route::post('/form/submit/{formType}', [FormController::class, 'submit'])->name('form.submit');
+
+Route::get('/konsultasi', [KonsultasiController::class, 'index'])->name('konsultasi.index');
+Route::post('/konsultasi/store', [KonsultasiController::class, 'store'])->name('konsultasi.store');
 
 // Hubungi Kami Routes (Form & AJAX Submit)
 Route::get('/hubungi-kami', [HubungiKamiController::class, 'index'])->name('hubungi-kami.index');

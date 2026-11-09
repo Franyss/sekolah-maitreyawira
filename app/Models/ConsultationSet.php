@@ -19,4 +19,12 @@ class ConsultationSet extends Model
         'sta',
         'datetime_apply',
     ];
+
+    /**
+     * Relasi One-to-Many ke ConsSchedule (Setiap jadwal bisa memiliki banyak pendaftaran)
+     */
+    public function schedules()
+    {
+        return $this->hasMany(ConsSchedule::class, 'cons_id', 'cons_id');
+    }
 }

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite('resources/css/app.css')
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-blue-600 selection:text-white flex flex-col min-h-screen overflow-x-hidden">
@@ -18,7 +19,7 @@
     {{-- 1. HEADER / NAVBAR PARTIAL --}}
     @include('partials.navbar')
 
-    {{-- 2. HERO BANNER & BREADCRUMB (DINAMIS VIA BLADE COMPONENT <x-hero-banner>) --}}
+    {{-- 2. HERO BANNER & BREADCRUMB --}}
     <x-hero-banner
         slug="berita"
         badge="Pusat Informasi & Kabar"
@@ -99,16 +100,24 @@
                                     <div class="h-48 bg-slate-100 overflow-hidden relative">
                                         <img src="{{ $imgUrl }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy">
 
-                                        @if($post->tags && $post->tags->count() > 0)
-                                            <span class="absolute top-3 left-3 px-2.5 py-1 bg-blue-600/90 text-white font-bold text-[10px] rounded-lg uppercase tracking-wider backdrop-blur-xs shadow-xs">
-                                                #{{ $post->tags->first()->post_tag_name }}
-                                            </span>
-                                        @else
-                                            <span class="absolute top-3 left-3 px-2.5 py-1 bg-slate-900/80 text-white font-bold text-[10px] rounded-lg uppercase tracking-wider backdrop-blur-xs shadow-xs">
-                                                Berita
-                                            </span>
-                                        @endif
+                                        <!-- UNIT SEKOLAH (POST_SCHOOL) & TAG BADGES -->
+                                        <div class="absolute top-3 left-3 flex flex-wrap gap-1 max-w-[85%] z-10">
+                                            @if($post->schools && $post->schools->count() > 0)
+                                                @foreach($post->schools as $sch)
+                                                    <span class="px-2 py-0.5 bg-amber-500 text-slate-900 font-black text-[10px] rounded-md uppercase tracking-wider shadow-xs">
+                                                        <i class="fa-solid fa-school text-[9px] mr-1"></i>{{ $sch->sch_name }}
+                                                    </span>
+                                                @endforeach
+                                            @endif
+
+                                            @if($post->tags && $post->tags->count() > 0)
+                                                <span class="px-2 py-0.5 bg-blue-600/90 text-white font-bold text-[10px] rounded-md uppercase tracking-wider backdrop-blur-xs shadow-xs">
+                                                    #{{ $post->tags->first()->post_tag_name }}
+                                                </span>
+                                            @endif
+                                        </div>
                                     </div>
+
                                     <div class="px-6 space-y-2">
                                         <div class="text-[11px] text-slate-400 font-medium flex items-center gap-3">
                                             <span class="flex items-center gap-1">
@@ -121,6 +130,7 @@
                                                 {{ $post->total_views ?? 0 }}
                                             </span>
                                         </div>
+
                                         <h4 class="font-bold text-slate-900 text-base group-hover:text-blue-600 transition leading-snug line-clamp-2">
                                             <a href="{{ route('berita.show', $post->slug) }}">
                                                 {{ $post->title }}
@@ -131,6 +141,7 @@
                                         </p>
                                     </div>
                                 </div>
+
                                 <div class="p-6 pt-4 border-t border-slate-100 mt-4">
                                     <a href="{{ route('berita.show', $post->slug) }}" class="text-xs font-extrabold text-blue-600 hover:text-blue-800 transition flex items-center gap-1">
                                         <span>Baca Selengkapnya</span>
@@ -148,26 +159,17 @@
                     {{-- NAVIGASI HALAMAN --}}
                     @if ($posts->hasPages())
                         <div class="flex items-center justify-between border-t border-slate-200 pt-6 mt-8" data-aos="fade-up">
-
-                            {{-- Tombol Previous --}}
                             @if ($posts->onFirstPage())
                                 <span class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs cursor-not-allowed flex items-center gap-1 select-none border border-slate-200/60">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                    </svg>
                                     <span>Sebelumnya</span>
                                 </span>
                             @else
                                 <a href="{{ $posts->previousPageUrl() }}"
-                                   class="px-4 py-2.5 rounded-xl bg-white border border-slate-200/80 text-slate-700 font-bold text-xs hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition flex items-center gap-1 shadow-xs">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                    </svg>
+                                   class="px-4 py-2.5 rounded-xl bg-white border border-slate-200/80 text-slate-700 font-bold text-xs hover:bg-blue-50 hover:text-blue-600 transition flex items-center gap-1 shadow-xs">
                                     <span>Sebelumnya</span>
                                 </a>
                             @endif
 
-                            {{-- Detail Informasi Halaman --}}
                             <div class="text-xs font-semibold text-slate-600 bg-white px-4 py-2 rounded-xl border border-slate-200/80 shadow-xs flex items-center gap-1.5">
                                 <span>Halaman</span>
                                 <span class="font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
@@ -179,24 +181,16 @@
                                 </span>
                             </div>
 
-                            {{-- Tombol Next --}}
                             @if ($posts->hasMorePages())
                                 <a href="{{ $posts->nextPageUrl() }}"
-                                   class="px-4 py-2.5 rounded-xl bg-white border border-slate-200/80 text-slate-700 font-bold text-xs hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition flex items-center gap-1 shadow-xs">
+                                   class="px-4 py-2.5 rounded-xl bg-white border border-slate-200/80 text-slate-700 font-bold text-xs hover:bg-blue-50 hover:text-blue-600 transition flex items-center gap-1 shadow-xs">
                                     <span>Berikutnya</span>
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                    </svg>
                                 </a>
                             @else
                                 <span class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs cursor-not-allowed flex items-center gap-1 select-none border border-slate-200/60">
                                     <span>Berikutnya</span>
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                    </svg>
                                 </span>
                             @endif
-
                         </div>
                     @endif
 
@@ -251,24 +245,7 @@
                         </div>
                     </div>
 
-                    <!-- Menu Navigasi Sub-Halaman Media -->
-                    <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm space-y-4">
-                        <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3">
-                            Media & Informasi
-                        </h3>
-                        <nav class="flex flex-col gap-1 text-xs font-bold text-slate-600">
-                            <a href="/berita" class="flex items-center justify-between p-2.5 rounded-lg bg-blue-50 text-blue-600 font-extrabold">
-                                <span>Berita & Pengumuman</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                            </a>
-                            <a href="/galeri" class="flex items-center justify-between p-2.5 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition">
-                                <span>Galeri & Dokumentasi</span>
-                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                            </a>
-                        </nav>
-                    </div>
-
-                    <!-- Widget PPDB Call-to-Action -->
+                    <!-- Widget Call-to-Action PPDB -->
                     <div class="bg-gradient-to-br from-amber-400 to-amber-500 rounded-2xl p-6 text-slate-900 shadow-md space-y-4" data-aos="fade-up">
                         <div class="font-black text-lg leading-tight">
                             Bergabung Bersama Keluarga Maitreyawira!
@@ -290,16 +267,10 @@
     {{-- 4. FOOTER PARTIAL --}}
     @include('partials.footer')
 
-    {{-- JS AOS --}}
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            AOS.init({
-                duration: 800,
-                once: true,
-                offset: 100,
-                easing: 'ease-out-cubic'
-            });
+            AOS.init({ duration: 800, once: true, offset: 100, easing: 'ease-out-cubic' });
         });
     </script>
 </body>
