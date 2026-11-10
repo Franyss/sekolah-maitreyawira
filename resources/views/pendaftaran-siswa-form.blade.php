@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulir Pendaftaran Siswa Baru | Sekolah Maitreyawira Palembang</title>
+    <title>Portal Pendaftaran SPMB Online | Sekolah Maitreyawira Palembang</title>
 
     {{-- Asset Vite & Fallback Tailwind CDN --}}
     @vite('resources/css/app.css')
@@ -37,168 +37,49 @@
                 <span>/</span>
                 <a href="{{ route('pendaftaran-siswa.index') }}" class="hover:text-amber-400 transition">Pendaftaran Siswa</a>
                 <span>/</span>
-                <span class="text-amber-400">Formulir Input Data</span>
+                <span class="text-amber-400">Portal SPMB Online</span>
             </nav>
 
             <h1 class="text-2xl sm:text-4xl font-black tracking-tight">
-                Formulir Pendaftaran Peserta Didik Baru
+                Pendaftaran Peserta Didik Baru (PPDB / SPMB)
             </h1>
             <p class="text-slate-300 text-xs sm:text-sm mt-1">
-                Silakan lengkapi data pendaftaran calon siswa di bawah ini.
+                Layanan Pendaftaran Siswa Baru Terpadu Sekolah Maitreyawira Palembang.
             </p>
         </div>
     </section>
 
-    {{-- 3. FORMULIR PENDAFTARAN --}}
-    <section class="py-10 bg-slate-50 flex-grow">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
+    {{-- 3. KARTU PETUNJUK & TOMBOL REDIRECT SPMB --}}
+    <section class="py-16 bg-slate-50 flex-grow flex items-center justify-center">
+        <div class="max-w-2xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-md text-center space-y-6">
 
-                <div class="border-b border-slate-100 pb-3 flex justify-between items-center">
-                    <h2 class="text-lg font-black text-slate-900">Input Data Pendaftaran</h2>
-                    <a href="{{ route('pendaftaran-siswa.index') }}" class="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
-                        <i class="fa-solid fa-arrow-left"></i> Kembali ke Informasi PPDB
+                <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-xs">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+
+                <div class="space-y-2">
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900">Portal SPMB Online Sekolah Maitreyawira</h2>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-lg mx-auto">
+                        Pengisian formulir pendaftaran peserta didik baru (TK, SD, SMP, SMA) dilakukan secara terpusat melalui Sistem Penerimaan Murid Baru (SPMB) resmi.
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="{{ route('pendaftaran-siswa.index') }}" class="w-full sm:w-auto px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition inline-flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Kembali</span>
+                    </a>
+
+                    <a href="https://spmb.maitreyawira-palembang.sch.id"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-900 font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 inline-flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-sm"></i>
+                        <span>Lanjut ke Formulir Pendaftaran SPMB</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                     </a>
                 </div>
-
-                <!-- Alert Container -->
-                <div id="alert-container">
-                    @if(session('success'))
-                        <div class="p-4 mb-4 text-xs text-emerald-800 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-2">
-                            <i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
-                            <div><strong>Berhasil!</strong> {{ session('success') }}</div>
-                        </div>
-                    @endif
-                    @if(session('error'))
-                        <div class="p-4 mb-4 text-xs text-rose-800 rounded-xl bg-rose-50 border border-rose-200 flex items-center gap-2">
-                            <i class="fa-solid fa-circle-exclamation text-rose-600 text-base"></i>
-                            <div><strong>Gagal!</strong> {{ session('error') }}</div>
-                        </div>
-                    @endif
-                </div>
-
-                <!-- Form ke /data/student_reg -->
-                <form id="registrationForm"
-                      action="{{ route('data.store', 'student_reg') }}"
-                      method="POST"
-                      class="space-y-4 text-xs sm:text-sm">
-                    @csrf
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                        <!-- 1. Tahun Ajaran -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">Tahun Ajaran <span class="text-red-500">*</span></label>
-                            <input type="text" name="year_reg" value="{{ old('year_reg', '2026/2027') }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs" required>
-                        </div>
-
-                        <!-- 2. Tingkat -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">Tingkat <span class="text-red-500">*</span></label>
-                            <input type="text" name="jenjang" value="{{ old('jenjang') }}" placeholder="Contoh: SD / SMP / SMA" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs" required>
-                        </div>
-
-                        <!-- 3. Gelombang -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">Gelombang</label>
-                            <input type="text" name="gelombang" value="{{ old('gelombang') }}" placeholder="Contoh: Gelombang 1" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs">
-                        </div>
-
-                        <!-- 4. No. Formulir -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-400 block">No. Formulir <span class="text-slate-400 text-[10px]">(Otomatis Sistem)</span></label>
-                            <input type="text" name="no_formulir" placeholder="Otomatis" class="w-full px-3 py-2 rounded-xl border border-slate-100 bg-slate-100 text-slate-400 text-xs cursor-not-allowed" disabled>
-                        </div>
-
-                        <!-- 5. Tanggal -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">Tanggal Pendaftaran <span class="text-red-500">*</span></label>
-                            <input type="date" name="tgl_daftar" value="{{ old('tgl_daftar', date('Y-m-d')) }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs" required>
-                        </div>
-
-                        <!-- 6. NISN -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">NISN</label>
-                            <input type="text" name="nisn" value="{{ old('nisn') }}" placeholder="Masukkan NISN" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs">
-                        </div>
-
-                        <!-- 7. Nama Siswa -->
-                        <div class="space-y-1 sm:col-span-2">
-                            <label class="font-bold text-slate-700 block">Nama Siswa <span class="text-red-500">*</span></label>
-                            <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" placeholder="Masukkan Nama Lengkap Siswa" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs" required>
-                        </div>
-
-                        <!-- 8. Jenis Kelamin -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">Jenis Kelamin <span class="text-red-500">*</span></label>
-                            <select name="jenkel" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs bg-white" required>
-                                <option value="">-- Pilih Jenis Kelamin --</option>
-                                <option value="Laki-laki" {{ old('jenkel') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                                <option value="Perempuan" {{ old('jenkel') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                            </select>
-                        </div>
-
-                        <!-- 9. Tempat Lahir -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">Tempat Lahir <span class="text-red-500">*</span></label>
-                            <input type="text" name="tempat_lhr" value="{{ old('tempat_lhr') }}" placeholder="Kota Lahir" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs" required>
-                        </div>
-
-                        <!-- 10. Tanggal Lahir -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">Tanggal Lahir <span class="text-red-500">*</span></label>
-                            <input type="date" name="tanggal_lhr" value="{{ old('tanggal_lhr', date('Y-m-d')) }}" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs" required>
-                        </div>
-
-                        <!-- 11. Nama Ayah -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">Nama Ayah <span class="text-red-500">*</span></label>
-                            <input type="text" name="nama_ayah" value="{{ old('nama_ayah') }}" placeholder="Masukkan Nama Ayah" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs" required>
-                        </div>
-
-                        <!-- 12. Nama Ibu -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">Nama Ibu <span class="text-red-500">*</span></label>
-                            <input type="text" name="nama_ibu" value="{{ old('nama_ibu') }}" placeholder="Masukkan Nama Ibu" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs" required>
-                        </div>
-
-                        <!-- 13. Alamat -->
-                        <div class="space-y-1 sm:col-span-2">
-                            <label class="font-bold text-slate-700 block">Alamat <span class="text-red-500">*</span></label>
-                            <textarea name="alamat" rows="2" placeholder="Masukkan Alamat Lengkap" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs" required>{{ old('alamat') }}</textarea>
-                        </div>
-
-                        <!-- 14. No. Telepon -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">No. Telepon <span class="text-red-500">*</span></label>
-                            <input type="tel" name="telepon" value="{{ old('telepon') }}" placeholder="Contoh: 08123456789" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs" required>
-                        </div>
-
-                        <!-- 15. Asal Sekolah -->
-                        <div class="space-y-1">
-                            <label class="font-bold text-slate-700 block">Asal Sekolah</label>
-                            <input type="text" name="nama_asal_sek" value="{{ old('nama_asal_sek') }}" placeholder="Nama Sekolah Asal" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs">
-                        </div>
-
-                        <!-- 16. Kas -->
-                        <div class="space-y-1 sm:col-span-2">
-                            <label class="font-bold text-slate-700 block">Kas</label>
-                            <input type="text" name="kas" value="{{ old('kas') }}" placeholder="Keterangan Kas" class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:border-blue-600 text-xs">
-                        </div>
-
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
-                        <button type="reset" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition">
-                            Reset
-                        </button>
-                        <button type="submit" id="btnSubmit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center gap-2">
-                            <i class="fa-solid fa-floppy-disk"></i>
-                            <span>Simpan Pendaftaran (`student_reg`)</span>
-                        </button>
-                    </div>
-                </form>
 
             </div>
         </div>

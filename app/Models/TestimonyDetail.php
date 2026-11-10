@@ -18,4 +18,12 @@ class TestimonyDetail extends Model
         'testimony_detail_content',
         'testimony_detail_youtube_link',
     ];
+
+    /**
+     * Relasi BelongsTo ke tabel testimony (Foreign Key: testimony_id)
+     */
+    public function testimony()
+    {
+        return $this->belongsTo(Testimony::class, 'testimony_id', 'testimony_id');
+    }
 }

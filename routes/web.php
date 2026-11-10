@@ -37,6 +37,7 @@ Route::get('/pencapaian/{slug}', [PencapaianController::class, 'show'])->name('p
 
 // Testimoni Routes
 Route::get('/testimoni', [TestimoniController::class, 'index'])->name('testimoni.index');
+Route::get('/testimoni/{slug}', [TestimoniController::class, 'show'])->name('testimoni.show');
 Route::get('/testimoni-orang-tua-siswa', [TestimoniController::class, 'index'])->name('testimoni.alt');
 
 // Unit Sekolah Routes
@@ -45,6 +46,9 @@ Route::get('/sekolah/{slug}', [SekolahController::class, 'show'])->name('sekolah
 // Pendaftaran, Rekrutmen, Galeri, Berita
 Route::get('/pendaftaran-siswa', [PendaftaranSiswaController::class, 'index'])->name('pendaftaran-siswa.index');
 Route::get('/pendaftaran-siswa-form', [PendaftaranSiswaController::class, 'form'])->name('pendaftaran-siswa.form');
+Route::get('/pendaftaran-siswa/form', function () {
+    return redirect()->away('https://spmb.maitreyawira-palembang.sch.id');
+})->name('pendaftaran-siswa.form');
 Route::get('/pendaftaran-beasiswa', [BeasiswaController::class, 'index'])->name('pendaftaran-beasiswa.index');
 Route::post('/pendaftaran-beasiswa', [BeasiswaController::class, 'store'])->name('pendaftaran-beasiswa.store');
 Route::get('/rekrutmen', [RekrutmenController::class, 'index'])->name('rekrutmen.index');

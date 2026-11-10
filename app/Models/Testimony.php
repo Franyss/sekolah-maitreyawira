@@ -17,4 +17,12 @@ class Testimony extends Model
         'testimony_slug',
         'testimony_content',
     ];
+
+    /**
+     * Relasi One-to-Many ke rincian detail testimoni (tabel testimony_detail)
+     */
+    public function details()
+    {
+        return $this->hasMany(TestimonyDetail::class, 'testimony_id', 'testimony_id');
+    }
 }
